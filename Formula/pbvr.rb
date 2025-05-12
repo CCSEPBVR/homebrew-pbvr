@@ -5,7 +5,7 @@ class Pbvr < Formula
   desc ""
   homepage "https://github.com/CCSEPBVR/CS-IS-PBVR"
   url "https://github.com/CCSEPBVR/CS-IS-PBVR/archive/refs/tags/v3.4.0.tar.gz"
-  sha256 "98d053a524a824cc5e14ccd1ef949e7faa4bbbab5ab98c3550ee4b32921f5ec2"
+  sha256 "4edbe420304b9436ab88829c0ff8465b27e10b26293288d5db3c84c3236e699c"
   license ""
 
   # depends_on "cmake" => :build
@@ -24,10 +24,13 @@ class Pbvr < Formula
     # https://rubydoc.brew.sh/Formula.html#std_configure_args-instance_method
     # system "./configure", "--disable-silent-rules", *std_configure_args
     # system "cmake", "-S", ".", "-B", "build", *std_cmake_args
+
+    # サーバのビルド
     ENV.append "CXXFLAGS", "-Xpreprocessor -fopenmp -I#{Formula["libomp"].opt_include}"
     ENV.append "LDFLAGS", "-L#{Formula["libomp"].opt_lib} -lomp"
-    system "make", "-C", "CS_server"
+    system "make", "-C", "CS_server", "-j", Formula["coreutils"].nproc
     bin.install "CS_server/pbvr_server"
+    bin.install "CS_server/Filter/pbvr_filter"
   end
 
   test do
