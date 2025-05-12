@@ -28,7 +28,7 @@ class Pbvr < Formula
     # サーバのビルド
     ENV.append "CXXFLAGS", "-Xpreprocessor -fopenmp -I#{Formula["libomp"].opt_include}"
     ENV.append "LDFLAGS", "-L#{Formula["libomp"].opt_lib} -lomp"
-    system "make", "-C", "CS_server", "-j", Formula["coreutils"].nproc
+    system "make", "-C", "CS_server", "-j", 8
     bin.install "CS_server/pbvr_server"
     bin.install "CS_server/Filter/pbvr_filter"
   end
