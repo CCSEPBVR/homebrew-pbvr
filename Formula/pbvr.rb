@@ -12,6 +12,8 @@ class Pbvr < Formula
   depends_on "make" => :build
   depends_on "gcc" => :build
   depends_on "libomp"
+  depends_on "qt@6.2.4" =>:build
+  depends_on "kvs"
 
   # Additional dependency
   # resource "" do
@@ -31,6 +33,24 @@ class Pbvr < Formula
     system "make", "-C", "CS_server", "-j", 8
     bin.install "CS_server/pbvr_server"
     bin.install "CS_server/Filter/pbvr_filter"
+
+    # クライアントのビルド
+    # mkdir "Client/build" do
+      # system "qmake", "../pbvr_client.pro", "CONFIG+=release"
+      
+      # /opt/homebrew/lib => -F/opt/homebrew/lib
+      # -framework OpenGL を追加
+      # inreplace "Makefile" do |s|
+        # 1. /opt/homebrew/lib → -F/opt/homebrew/lib に置換
+        # s.gsub! "/opt/homebrew/lib", "-F/opt/homebrew/lib"
+
+        # 2. LIBS 行の末尾に -framework OpenGL を追加（未追加時のみ）
+        # s.gsub! "-framework AGL", "-framework AGL -framework OpenGL"
+      # end
+
+      # system "make", "-j", ENV.make_jobs
+      # bin.install "App/pbvr_client.app/Contents/MacOS/pbvr_client"
+    # end
   end
 
   test do
