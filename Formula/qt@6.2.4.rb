@@ -24,56 +24,23 @@ class QtAT624 < Formula
     mkdir "build" do
       # cmakeの引数の設定
       # FEATURE_gssapi=OFFにしないとビルドエラー
-      args = *std_cmake_args + %W[
+      args = %W[
         -DCMAKE_INSTALL_PREFIX=#{prefix}
-        -DCMAKE_OSX_ARCHITECTURES=arm64
         -DQT_BUILD_TESTS_BY_DEFAULT=OFF
         -DQT_BUILD_EXAMPLES_BY_DEFAULT=OFF
         -DBUILD_qtwebengine=OFF
-        -DBUILD_qtpdf=OFF
-        -DFEATURE_glib=OFF
-        -DFEATURE_zstd=OFF
-        -DFEATURE_doubleconversion=OFF
-        -DFEATURE_system_libb2=OFF
-        -DFEATURE_system_pcre2=OFF
-        -DFEATURE_openssl=OFF
-        -DFEATURE_opensslv11=OFF
-        -DFEATURE_dtls=OFF
-        -DFEATURE_ocsp=OFF
-        -DFEATURE_brotli=OFF
-        -DFEATURE_system_freetype=OFF
-        -DFEATURE_system_jpeg=OFF
-        -DFEATURE_system_png=OFF
-        -DFEATURE_system_textmarkdownreader=OFF
-        -DFEATURE_egl=OFF
-        -DFEATURE_vulkan=OFF
-        -DFEATURE_jasper=OFF
-        -DFEATURE_mng=OFF
-        -DFEATURE_system_tiff=OFF
-        -DFEATURE_system_webp=OFF
-        -DFEATURE_system_assimp=OFF
-        -DFEATURE_linux_dmabuf=OFF
-        -DFEATURE_open62541_security=OFF
-        -DFEATURE_gds=OFF
+        -DBUILD_qttranslations=OFF
         -DFEATURE_gssapi=OFF
       ]
-
-      args << "-DCMAKE_CXX_FLAGS=-framework OpenGL"
-      args << "-DCMAKE_EXE_LINKER_FLAGS=-framework OpenGL"
       
       # cmakeの設定
       system "cmake", "..", *args
-
-      # ディレクトリの作成(作成しないとビルドエラー)
-      target_dir = Pathname("qtbase/translations")
-      target_dir.mkpath
 
       # ビルド
       system "cmake", "--build", ".", "--parallel", ENV.make_jobs
 
       # インストール
       system "cmake", "--install", "."
-
     end
   end
 
@@ -125,3 +92,28 @@ index 4441625237..7afc1cf1fa 100644
  {
      bool operator() (AVCaptureDeviceFormat *format)
      {
+
+diff --git a/qtbase/cmake/FindWrapOpenGL.cmake b/qtbase/cmake/FindWrapOpenGL.cmake
+index 91d8b77c12..bdbf1aa8db 100644
+--- a/qtbase/cmake/FindWrapOpenGL.cmake
++++ b/qtbase/cmake/FindWrapOpenGL.cmake
+@@ -14,14 +14,18 @@ if (OpenGL_FOUND)
+ 
+     add_library(WrapOpenGL::WrapOpenGL INTERFACE IMPORTED)
+     if(APPLE)
++        # CMake 3.27 and older:
+         # On Darwin platforms FindOpenGL sets IMPORTED_LOCATION to the absolute path of the library
+         # within the framework. This ends up as an absolute path link flag, which we don't want,
+         # because that makes our .prl files un-relocatable.
+         # Extract the framework path instead, and use that in INTERFACE_LINK_LIBRARIES,
+-        # which CMake ends up transforming into a reloctable -framework flag.
++        # which CMake ends up transforming into a relocatable -framework flag.
+         # See https://gitlab.kitware.com/cmake/cmake/-/issues/20871 for details.
++        #
++        # CMake 3.28 and above:
++        # IMPORTED_LOCATION is the absolute path the the OpenGL.framework folder.
+         get_target_property(__opengl_fw_lib_path OpenGL::GL IMPORTED_LOCATION)
+-        if(__opengl_fw_lib_path)
++        if(__opengl_fw_lib_path AND NOT __opengl_fw_lib_path MATCHES "/([^/]+)\\.framework$")
+             get_filename_component(__opengl_fw_path "${__opengl_fw_lib_path}" DIRECTORY)
+         endif()

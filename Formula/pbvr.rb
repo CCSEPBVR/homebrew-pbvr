@@ -27,30 +27,32 @@ class Pbvr < Formula
     # system "./configure", "--disable-silent-rules", *std_configure_args
     # system "cmake", "-S", ".", "-B", "build", *std_cmake_args
 
+    ENV["KVS_DIR"] = Formula["kvs"].prefix
+
     # サーバのビルド
     ENV.append "CXXFLAGS", "-Xpreprocessor -fopenmp -I#{Formula["libomp"].opt_include}"
     ENV.append "LDFLAGS", "-L#{Formula["libomp"].opt_lib} -lomp"
-    system "make", "-C", "CS_server", "-j", 8
+    system "make", "-C", "CS_server", "-j", ENV.make_jobs
     bin.install "CS_server/pbvr_server"
     bin.install "CS_server/Filter/pbvr_filter"
 
     # クライアントのビルド
-    # mkdir "Client/build" do
-      # system "qmake", "../pbvr_client.pro", "CONFIG+=release"
-      
-      # /opt/homebrew/lib => -F/opt/homebrew/lib
-      # -framework OpenGL を追加
-      # inreplace "Makefile" do |s|
-        # 1. /opt/homebrew/lib → -F/opt/homebrew/lib に置換
-        # s.gsub! "/opt/homebrew/lib", "-F/opt/homebrew/lib"
+    mkdir "Client/build" do
+      system "qmake", "../pbvr_client.pro", "CONFIG+=release"
+      system "make", "-j", ENV.make_jobs
+      bin.install "App/pbvr_client.app/Contents/MacOS/pbvr_client"
+      cp_r "../Font", bin
+      cp_r "../Shader", bin
+    end
+  end
 
-        # 2. LIBS 行の末尾に -framework OpenGL を追加（未追加時のみ）
-        # s.gsub! "-framework AGL", "-framework AGL -framework OpenGL"
-      # end
-
-      # system "make", "-j", ENV.make_jobs
-      # bin.install "App/pbvr_client.app/Contents/MacOS/pbvr_client"
-    # end
+  def caveats
+    <<~EOS
+    ===============================================================================
+    To use `pbvr_client`, you might need to set the following environment variable:
+    echo 'export KVS_DIR="#{Formula["kvs"].prefix}"' >> ~/.zshrc
+    ===============================================================================
+    EOS
   end
 
   test do
