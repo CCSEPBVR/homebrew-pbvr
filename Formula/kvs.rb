@@ -10,7 +10,6 @@ class Kvs < Formula
   license ""
 
   # depends_on "cmake" => :build
-  depends_on "gcc" => :build
   depends_on "qt@6.2.4" => :build
 
   patch :DATA

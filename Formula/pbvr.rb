@@ -9,8 +9,6 @@ class Pbvr < Formula
   license ""
 
   # depends_on "cmake" => :build
-  depends_on "make" => :build
-  depends_on "gcc" => :build
   depends_on "libomp"
   depends_on "qt@6.2.4" =>:build
   depends_on "kvs"

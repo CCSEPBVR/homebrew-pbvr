@@ -6,16 +6,8 @@ class QtAT624 < Formula
   license all_of: ["GFDL-1.3-only", "GPL-2.0-only", "GPL-3.0-only", "LGPL-2.1-only", "LGPL-3.0-only"]
   head "https://code.qt.io/qt/qt5.git", branch: "dev"
 
-  # bottle do
-    # root_url "file:///Users/sakamoto/Work/homebrew-qt624/bottles"
-    # rebuild 1
-    # sha256 cellar: :any, arm64_sequoia: "1405a6ad770312a309d9e9d0ece4a05269fa79bb69b55039afb8a33229948855"
-  # end
-
   depends_on "cmake" => [:build]
-  depends_on "ninja" => [:build]
   depends_on "python" => [:build]
-  depends_on "gcc"
   depends_on xcode: :build
 
   patch :DATA
