@@ -3,8 +3,13 @@ class QtAT624 < Formula
   homepage "https://www.qt.io/"
   url "https://download.qt.io/archive/qt/6.2/6.2.4/single/qt-everywhere-src-6.2.4.tar.xz"
   sha256 "cfe41905b6bde3712c65b102ea3d46fc80a44c9d1487669f14e4a6ee82ebb8fd"
-  license all_of: ["GFDL-1.3-only", "GPL-2.0-only", "GPL-3.0-only", "LGPL-2.1-only", "LGPL-3.0-only"]
-  head "https://code.qt.io/qt/qt5.git", branch: "dev"
+  license all_of: [
+    "BSD-3-Clause",
+    "GFDL-1.3-no-invariants-only",
+    "GPL-2.0-only",
+    { "GPL-3.0-only" => { with: "Qt-GPL-exception-1.0" } },
+    "LGPL-3.0-only",
+  ]
 
   depends_on "cmake" => [:build]
   depends_on "python" => [:build]
