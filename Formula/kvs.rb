@@ -7,7 +7,7 @@ class Kvs < Formula
   url "https://github.com/TO0603/KVS/archive/refs/tags/forDev.tar.gz"
   version "3.1"
   sha256 "0ab932b0273f7f10972c0cb37de775a2f3923ca8ae26187d1b8c52847147ed84"
-  license ""
+  license "BSD-3-Clause"
 
   # depends_on "cmake" => :build
   depends_on "qt@6.2.4" => :build
