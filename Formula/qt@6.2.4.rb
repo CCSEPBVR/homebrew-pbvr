@@ -13,6 +13,7 @@ class QtAT624 < Formula
 
   depends_on "cmake" => [:build]
   depends_on "python" => [:build]
+  depends_on "libpthread-stubs"
   depends_on xcode: :build
 
   patch :DATA
@@ -27,7 +28,6 @@ class QtAT624 < Formula
         -DQT_BUILD_EXAMPLES_BY_DEFAULT=OFF
         -DBUILD_qtwebengine=OFF
         -DBUILD_qttranslations=OFF
-        -DFEATURE_gssapi=OFF
       ]
       
       # cmakeの設定
@@ -57,25 +57,6 @@ end
 
 
 __END__
-diff --git a/qtbase/cmake/QtPublicTargetHelpers.cmake b/qtbase/cmake/QtPublicTargetHelpers.cmake
-index 8f6c434c4e..25e25af965 100644
---- a/qtbase/cmake/QtPublicTargetHelpers.cmake
-+++ b/qtbase/cmake/QtPublicTargetHelpers.cmake
-@@ -253,8 +253,12 @@ endfunction()
- function(__qt_internal_promote_target_to_global target)
-     get_property(is_global TARGET ${target} PROPERTY IMPORTED_GLOBAL)
-     if(NOT is_global)
--        message(DEBUG "Promoting target to global: '${target}'")
--        set_property(TARGET ${target} PROPERTY IMPORTED_GLOBAL TRUE)
-+        if(NOT "${target}" STREQUAL "Threads::Threads")
-+            message(DEBUG "Promoting target to global: '${target}'")
-+            set_property(TARGET ${target} PROPERTY IMPORTED_GLOBAL TRUE)
-+        else()
-+            message(STATUS "Skipping IMPORTED_GLOBAL for ${target}")
-+        endif()
-     endif()
- endfunction()
- 
 diff --git a/qtmultimedia/src/multimedia/platform/darwin/camera/avfcamerautility.mm b/qtmultimedia/src/multimedia/platform/darwin/camera/avfcamerautility.mm
 index 4441625237..7afc1cf1fa 100644
 --- a/qtmultimedia/src/multimedia/platform/darwin/camera/avfcamerautility.mm
