@@ -16,6 +16,33 @@ class QtAT624 < Formula
   depends_on "libpthread-stubs"
   depends_on xcode: :build
 
+  on_linux do
+    depends_on "gcc" => [:build]
+    depends_on "libxrender"
+    depends_on "libx11"
+    depends_on "libxcb"
+    depends_on "xcb-util"
+    depends_on "xcb-util-image"
+    depends_on "xcb-util-renderutil"
+    depends_on "xcb-proto"
+    depends_on "xcb-util-cursor"
+    depends_on "xcb-util-keysyms"
+    depends_on "xcb-util-wm"
+    depends_on "libxkbcommon"
+    depends_on "fontconfig"
+    depends_on "freetype"
+    depends_on "libxext"
+    depends_on "libsm"
+    depends_on "libice"
+    depends_on "glib"
+    depends_on "libpthread-stubs"
+    depends_on "mesa"
+    depends_on "glew"
+    depends_on "glfw"
+    depends_on "glm"
+    depends_on "harfbuzz"
+  end
+
   patch :DATA
 
   def install
@@ -29,7 +56,15 @@ class QtAT624 < Formula
         -DBUILD_qtwebengine=OFF
         -DBUILD_qttranslations=OFF
       ]
-      
+
+      if OS.linux?
+        args = args + %W[
+          -DFEATURE_xcb=ON
+          -DQT_FEATURE_avx2=OFF
+          -DQT_FEATURE_clang=OFF
+        ]
+      end
+
       # cmakeの設定
       system "cmake", "..", *args
 
@@ -95,3 +130,13 @@ index 91d8b77c12..bdbf1aa8db 100644
 +        if(__opengl_fw_lib_path AND NOT __opengl_fw_lib_path MATCHES "/([^/]+)\\.framework$")
              get_filename_component(__opengl_fw_path "${__opengl_fw_lib_path}" DIRECTORY)
          endif()
+
+@@ -41,7 +45,7 @@ if (OpenGL_FOUND)
+         target_link_libraries(WrapOpenGL::WrapOpenGL INTERFACE ${__opengl_fw_path})
+         target_link_libraries(WrapOpenGL::WrapOpenGL INTERFACE ${__opengl_agl_fw_path})
+     else()
+-        target_link_libraries(WrapOpenGL::WrapOpenGL INTERFACE OpenGL::GL)
++        target_link_libraries(WrapOpenGL::WrapOpenGL INTERFACE "-lGL")
+     endif()
+ endif()
+
