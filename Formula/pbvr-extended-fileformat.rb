@@ -30,10 +30,16 @@ class PbvrExtendedFileformat < Formula
     # system "./configure", "--disable-silent-rules", *std_configure_args
     # system "cmake", "-S", ".", "-B", "build", *std_cmake_args
 
-    ENV["KVS_DIR"] = Formula["kvs-extended-fileformat"].prefix
+    ENV["HOMEBREW_KVS_DIR"] = Formula["kvs-extended-fileformat"].prefix
     ENV["VTK_VERSION"] = "9.3"
     ENV["VTK_INCLUDE_PATH"] = "#{Formula["vtk@9.3.1"].opt_include}/vtk-9.3"
     ENV["VTK_LIB_PATH"] = Formula["vtk@9.3.1"].opt_lib
+
+    Dir["**/*"].each do |file|
+      next unless File.file?(file)
+      next unless File.read(file).include?("KVS_DIR")
+      inreplace file, "KVS_DIR", "HOMEBREW_KVS_DIR"
+    end
 
     # サーバのビルド
     system "make", "-C", "CS_server", "-j", ENV.make_jobs
@@ -58,7 +64,7 @@ class PbvrExtendedFileformat < Formula
     <<~EOS
     ===============================================================================
     To use `pbvr_client`, you might need to set the following environment variable:
-    echo 'export KVS_DIR=#{Formula["kvs-extended-fileformat"].prefix}' >> ~/.zshrc
+    echo 'export HOMEBREW_KVS_DIR=#{Formula["kvs-extended-fileformat"].prefix}' >> ~/.zshrc
     ===============================================================================
     EOS
   end

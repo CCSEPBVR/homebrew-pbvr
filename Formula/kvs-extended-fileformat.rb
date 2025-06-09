@@ -24,10 +24,17 @@ class KvsExtendedFileformat < Formula
   def install
     # Remove unrecognized options if they cause configure to fail
     # https://rubydoc.brew.sh/Formula.html#std_configure_args-instance_method
-    ENV["KVS_DIR"] = "#{prefix}"
+    ENV["HOMEBREW_KVS_DIR"] = "#{prefix}"
     ENV["VTK_VERSION"] = "9.3"
     ENV["VTK_INCLUDE_PATH"] = "#{Formula["vtk@9.3.1"].opt_include}/vtk-9.3"
     ENV["VTK_LIB_PATH"] = Formula["vtk@9.3.1"].opt_lib
+
+    Dir["**/*"].each do |file|
+      next unless File.file?(file)
+      next unless File.read(file).include?("KVS_DIR")
+      inreplace file, "KVS_DIR", "HOMEBREW_KVS_DIR"
+    end
+
     system "make", "-j", ENV.make_jobs
     system "make", "install"
   end
