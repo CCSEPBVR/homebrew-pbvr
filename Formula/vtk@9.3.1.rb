@@ -5,6 +5,12 @@ class VtkAT931 < Formula
   sha256 "8354ec084ea0d2dc3d23dbe4243823c4bfc270382d0ce8d658939fd50061cab8"
   license "BSD-3-Clause"
 
+  bottle do
+    root_url "https://github.com/CCSEPBVR/homebrew-pbvr/releases/download/v3.4.0"
+    rebuild 1
+    sha256 cellar: :any, arm64_sequoia: "dba22dad77e7c4addab5381659df2dae97f2759bacb74d91c29961cddda4c784"
+  end
+
   depends_on "cmake" => [:build]
 
   on_linux do

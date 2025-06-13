@@ -8,10 +8,16 @@ class PbvrExtendedFileformat < Formula
   sha256 "4edbe420304b9436ab88829c0ff8465b27e10b26293288d5db3c84c3236e699c"
   license ""
 
+  bottle do
+    root_url "https://github.com/CCSEPBVR/homebrew-pbvr/releases/download/v3.4.0"
+    rebuild 1
+    sha256 cellar: :any, arm64_sequoia: "ddb74bc17cdca613432de477d7fd9b895188e3aaf6292166b2d79afc75b3c0ab"
+  end
+
   # depends_on "cmake" => :build
   depends_on "libomp"
-  depends_on "qt@6.2.4" =>:build
-  depends_on "vtk@9.3.1" => :build
+  depends_on "qt@6.2.4"
+  depends_on "vtk@9.3.1"
   depends_on "kvs-extended-fileformat"
 
   # Additional dependency

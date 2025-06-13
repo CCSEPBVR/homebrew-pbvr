@@ -11,9 +11,15 @@ class QtAT624 < Formula
     "LGPL-3.0-only",
   ]
 
+  bottle do
+    root_url "https://github.com/CCSEPBVR/homebrew-pbvr/releases/download/v3.4.0"
+    rebuild 1
+    sha256 cellar: :any, arm64_sequoia: "efba8a268795a91297cf050ae233cb9a5f01ceeed0808b61406ddd8599df1f96"
+  end
+
   depends_on "cmake" => [:build]
   depends_on "python" => [:build]
-  depends_on "libpthread-stubs"
+  depends_on "openssl@3"
   depends_on xcode: :build
 
   on_linux do

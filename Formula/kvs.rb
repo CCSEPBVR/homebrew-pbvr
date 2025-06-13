@@ -9,8 +9,14 @@ class Kvs < Formula
   sha256 "0ab932b0273f7f10972c0cb37de775a2f3923ca8ae26187d1b8c52847147ed84"
   license "BSD-3-Clause"
 
+  bottle do
+    root_url "https://github.com/CCSEPBVR/homebrew-pbvr/releases/download/v3.4.0"
+    rebuild 1
+    sha256 cellar: :any_skip_relocation, arm64_sequoia: "f9e6bb765c62fd77b2a29277917b6e1ce5a7ab9ee941db99f37fdc6a442a79d8"
+  end
+
   # depends_on "cmake" => :build
-  depends_on "qt@6.2.4" => :build
+  depends_on "qt@6.2.4"
 
   patch :DATA
 

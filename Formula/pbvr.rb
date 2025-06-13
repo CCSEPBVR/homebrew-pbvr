@@ -8,9 +8,15 @@ class Pbvr < Formula
   sha256 "4edbe420304b9436ab88829c0ff8465b27e10b26293288d5db3c84c3236e699c"
   license ""
 
+  bottle do
+    root_url "https://github.com/CCSEPBVR/homebrew-pbvr/releases/download/v3.4.0"
+    rebuild 1
+    sha256 cellar: :any, arm64_sequoia: "aa484bc5a8b89b1462de655fdc1fd3cf9680dbd7253a565cc5b788c3bd267880"
+  end
+
   # depends_on "cmake" => :build
   depends_on "libomp"
-  depends_on "qt@6.2.4" =>:build
+  depends_on "qt@6.2.4"
   depends_on "kvs"
 
   on_linux do

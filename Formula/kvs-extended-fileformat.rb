@@ -9,9 +9,15 @@ class KvsExtendedFileformat < Formula
   sha256 "0ab932b0273f7f10972c0cb37de775a2f3923ca8ae26187d1b8c52847147ed84"
   license "BSD-3-Clause"
 
+  bottle do
+    root_url "https://github.com/CCSEPBVR/homebrew-pbvr/releases/download/v3.4.0"
+    rebuild 1
+    sha256 cellar: :any_skip_relocation, arm64_sequoia: "83c2868cd2de0470612242a0c2a391cecd308f34a05f8e196d9f45359ed9266e"
+  end
+
   # depends_on "cmake" => :build
-  depends_on "qt@6.2.4" => :build
-  depends_on "vtk@9.3.1" => :build
+  depends_on "qt@6.2.4"
+  depends_on "vtk@9.3.1"
 
   patch :DATA
 
