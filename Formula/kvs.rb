@@ -13,6 +13,7 @@ class Kvs < Formula
     root_url "https://github.com/CCSEPBVR/homebrew-pbvr/releases/download/v3.4.0"
     sha256 cellar: :any_skip_relocation, arm64_sonoma: "4a8b24e7c641f0513394bfbf7af544ec2b7219941703f28dd0412685b26e2e6a"
     sha256 cellar: :any_skip_relocation, arm64_sequoia: "f9e6bb765c62fd77b2a29277917b6e1ce5a7ab9ee941db99f37fdc6a442a79d8"
+    sha256 cellar: :any_skip_relocation, x86_64_linux: "5c984e103ba00f23c4cff4ad1a14e3f21970d11f2e9c97ebda6efed7e8313eb6"
   end
 
   # depends_on "cmake" => :build
