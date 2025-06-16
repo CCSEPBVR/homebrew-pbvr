@@ -11,7 +11,7 @@ class KvsExtendedFileformat < Formula
 
   bottle do
     root_url "https://github.com/CCSEPBVR/homebrew-pbvr/releases/download/v3.4.0"
-    rebuild 1
+    sha256 cellar: :any_skip_relocation, arm64_sonoma: "d3e1aef162ae6f87ad29fb32368989c03d712977bb13d09204d0736f952ff4fe"
     sha256 cellar: :any_skip_relocation, arm64_sequoia: "83c2868cd2de0470612242a0c2a391cecd308f34a05f8e196d9f45359ed9266e"
   end
 

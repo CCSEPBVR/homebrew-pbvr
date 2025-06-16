@@ -10,7 +10,7 @@ class Pbvr < Formula
 
   bottle do
     root_url "https://github.com/CCSEPBVR/homebrew-pbvr/releases/download/v3.4.0"
-    rebuild 1
+    sha256 cellar: :any, arm64_sonoma: "3f50ee97409463f2c08f51a15adc917c32380486525dadf1cdb465d1a98cc141"
     sha256 cellar: :any, arm64_sequoia: "aa484bc5a8b89b1462de655fdc1fd3cf9680dbd7253a565cc5b788c3bd267880"
   end
 

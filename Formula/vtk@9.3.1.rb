@@ -7,7 +7,7 @@ class VtkAT931 < Formula
 
   bottle do
     root_url "https://github.com/CCSEPBVR/homebrew-pbvr/releases/download/v3.4.0"
-    rebuild 1
+    sha256 cellar: :any, arm64_sonoma: "cd7fe90595bdde9d0ea97dbd6415a03d87cb9cb61568d28f4c86dffb9a255ab6"
     sha256 cellar: :any, arm64_sequoia: "dba22dad77e7c4addab5381659df2dae97f2759bacb74d91c29961cddda4c784"
   end
 

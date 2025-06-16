@@ -13,7 +13,7 @@ class QtAT624 < Formula
 
   bottle do
     root_url "https://github.com/CCSEPBVR/homebrew-pbvr/releases/download/v3.4.0"
-    rebuild 1
+    sha256 cellar: :any, arm64_sonoma: "e6c82434b5d66ae409d2be9eff53dd5dc43d4f949b3dffe90196973fd6b62b67"
     sha256 cellar: :any, arm64_sequoia: "efba8a268795a91297cf050ae233cb9a5f01ceeed0808b61406ddd8599df1f96"
   end
 
