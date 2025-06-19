@@ -10,15 +10,24 @@ class Pbvr < Formula
 
   bottle do
     root_url "https://github.com/CCSEPBVR/homebrew-pbvr/releases/download/v3.4.0"
-    sha256 cellar: :any, arm64_sonoma: "3f50ee97409463f2c08f51a15adc917c32380486525dadf1cdb465d1a98cc141"
-    sha256 cellar: :any, arm64_sequoia: "aa484bc5a8b89b1462de655fdc1fd3cf9680dbd7253a565cc5b788c3bd267880"
-    sha256 cellar: :any_skip_relocation, x86_64_linux: "ed533dd7949ca84e491ea732d44f0056f3f67dad4787543d47dff355bb59d2cc"
+    rebuild 1
+    sha256 cellar: :any, arm64_sonoma: "2afebe68fa8b15a7335879307d2509b600a29cf6f0da2ab12d3ec96597fcfbd1"
+    sha256 cellar: :any, arm64_sequoia: "9acc90216341aafa439a2baac2eddbc8feab504b5635c26ce5d4ad18a41f6fa7"
+    sha256 cellar: :any_skip_relocation, x86_64_linux: "ef1da4c9a84877f3186859042b7dfcec1bec20719cf334b177cd427fee8377e8"
   end
 
   # depends_on "cmake" => :build
   depends_on "libomp"
   depends_on "qt@6.2.4"
+  depends_on "vtk@9.3.1"
   depends_on "kvs"
+
+  on_macos do
+    patch do
+      url "https://github.com/CCSEPBVR/homebrew-pbvr/releases/download/v3.4.0/pbvr-conf-mac.patch"
+      sha256 "845961faab9393e11dba2f62050ea258cca06d6a51264c6d7a9a99ac589c8f05"
+    end
+  end
 
   on_linux do
     patch :DATA
@@ -37,6 +46,9 @@ class Pbvr < Formula
     # system "cmake", "-S", ".", "-B", "build", *std_cmake_args
 
     ENV["HOMEBREW_KVS_DIR"] = Formula["kvs"].prefix
+    ENV["VTK_VERSION"] = "9.3"
+    ENV["VTK_INCLUDE_PATH"] = "#{Formula["vtk@9.3.1"].opt_include}/vtk-9.3"
+    ENV["VTK_LIB_PATH"] = Formula["vtk@9.3.1"].opt_lib
 
     Dir["**/*"].each do |file|
       next unless File.file?(file)
@@ -50,6 +62,7 @@ class Pbvr < Formula
     system "make", "-C", "CS_server", "-j", ENV.make_jobs
     bin.install "CS_server/pbvr_server"
     bin.install "CS_server/Filter/pbvr_filter"
+    bin.install "CS_server/KVSMLConverter/Example/Release/kvsml-converter"
 
     # クライアントのビルド
     mkdir "Client/build" do
@@ -90,17 +103,19 @@ end
 
 __END__
 diff --git a/CS_server/pbvr.conf b/CS_server/pbvr.conf
-index 3990688..dde7d66 100644
+index 39906887..ca67db10 100644
 --- a/CS_server/pbvr.conf
 +++ b/CS_server/pbvr.conf
-@@ -1,6 +1,6 @@
+@@ -1,7 +1,7 @@
  #PBVR_MACHINE=Makefile_machine_gcc_mpi_omp
  #PBVR_MACHINE=Makefile_machine_s86_omp
 -PBVR_MACHINE=Makefile_machine_mac_gcc_omp
 +PBVR_MACHINE=Makefile_machine_gcc_omp
  PBVR_MAKE_FILTER=1
  PBVR_MAKE_SERVER=1
- PBVR_MAKE_KVSML_COMVERTER=0
+-PBVR_MAKE_KVSML_COMVERTER=0
++PBVR_MAKE_KVSML_COMVERTER=1
+ PBVR_SUPPORT_VTK=0
 
 diff --git a/CS_server/arch/Makefile_machine_gcc_omp b/CS_server/arch/Makefile_machine_gcc_omp
 index 3974aa4..18f6880 100644
