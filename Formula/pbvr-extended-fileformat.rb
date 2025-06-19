@@ -10,9 +10,10 @@ class PbvrExtendedFileformat < Formula
 
   bottle do
     root_url "https://github.com/CCSEPBVR/homebrew-pbvr/releases/download/v3.4.0"
-    sha256 cellar: :any, arm64_sonoma: "5b1615c584da9a5553bd06d1c88a0d8199b17f3f5ddb839676b9c550b32343aa"
-    sha256 cellar: :any, arm64_sequoia: "ddb74bc17cdca613432de477d7fd9b895188e3aaf6292166b2d79afc75b3c0ab"
-    sha256 cellar: :any_skip_relocation, x86_64_linux: "f82e98a8d6eca35c7b1e51acdbae5ffdc8b8ea523abfa7f5cf2196891f8a02aa"
+    rebuild 1
+    sha256 cellar: :any, arm64_sonoma: "292873c34342dd0fe0cea4d83dfd06003cbf5430886b2d6b0c47e495e92155e5"
+    sha256 cellar: :any, arm64_sequoia: "bdc1b75fd3a22d08c12fbcd5e52e5becaed651fcdf77c11a10dfdb2b7168c3ba"
+    sha256 cellar: :any_skip_relocation, x86_64_linux: "e55fb8da8395ad2731c359f7cc01c51380784c975629f12f38e515e6ab02a147"
   end
 
   # depends_on "cmake" => :build
