@@ -28,6 +28,10 @@ class Pbvr < Formula
 
   on_linux do
     patch :DATA
+    patch do
+      url "file:///home/linuxbrew/.linuxbrew/Homebrew/Library/Taps/ccsepbvr/homebrew-pbvr/Formula/kvs-conf-linux.patch"
+      sha256 "a62f7fb223a262929b0fc529c9fdf6c2f0868bb1385e7716f017b6499c80d82e"
+    end
   end
 
   # Additional dependency
@@ -121,3 +125,4 @@ index 39906887..ca67db10 100644
 -PBVR_MAKE_KVSML_COMVERTER=0
 +PBVR_MAKE_KVSML_COMVERTER=1
  PBVR_SUPPORT_VTK=0
+

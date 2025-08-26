@@ -33,6 +33,10 @@ class PbvrExtendedFileformat < Formula
   end
 
   on_linux do
+    patch do
+      url "file:///home/linuxbrew/.linuxbrew/Homebrew/Library/Taps/ccsepbvr/homebrew-pbvr/Formula/kvs-extended-fileformat-conf-linux.patch"
+      sha256 "ccb49e41ffd6ef254b8fb5e2b8265ab69d0fe7316a64f9354876af5f5918f73b"
+    end
     patch :DATA
   end
 
