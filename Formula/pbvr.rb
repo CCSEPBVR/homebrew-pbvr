@@ -4,28 +4,25 @@
 class Pbvr < Formula
   desc ""
   homepage "https://github.com/CCSEPBVR/CS-IS-PBVR"
-  url "https://github.com/CCSEPBVR/CS-IS-PBVR/archive/refs/tags/v3.4.0.tar.gz"
-  sha256 "4edbe420304b9436ab88829c0ff8465b27e10b26293288d5db3c84c3236e699c"
+  url "https://github.com/CCSEPBVR/CS-IS-PBVR/archive/refs/tags/v3.5.0.tar.gz"
+  sha256 "264c82d9e94b6f8477952ce2f80834332dbc9047db694f7f3ba2ab07c7c92aae"
   license ""
-
-  bottle do
-    root_url "https://github.com/CCSEPBVR/homebrew-pbvr/releases/download/v3.4.0"
-    rebuild 1
-    sha256 cellar: :any, arm64_sonoma: "2afebe68fa8b15a7335879307d2509b600a29cf6f0da2ab12d3ec96597fcfbd1"
-    sha256 cellar: :any, arm64_sequoia: "9acc90216341aafa439a2baac2eddbc8feab504b5635c26ce5d4ad18a41f6fa7"
-    sha256 cellar: :any_skip_relocation, x86_64_linux: "ef1da4c9a84877f3186859042b7dfcec1bec20719cf334b177cd427fee8377e8"
-  end
 
   # depends_on "cmake" => :build
   depends_on "libomp"
   depends_on "qt@6.2.4"
   depends_on "vtk@9.3.1"
-  depends_on "kvs"
+  depends_on "freeglut"
 
   on_macos do
     patch do
       url "https://github.com/CCSEPBVR/homebrew-pbvr/releases/download/v3.4.0/pbvr-conf-mac.patch"
       sha256 "845961faab9393e11dba2f62050ea258cca06d6a51264c6d7a9a99ac589c8f05"
+    end
+
+    patch do
+      url "file:///opt/homebrew/Library/Taps/ccsepbvr/homebrew-pbvr/Formula/kvs-conf.patch"
+      sha256 "044808cbc476a1e65b061facf54bbd6ec6abfd62afc8091a7eeec89ccf4bea78"      
     end
   end
 
@@ -45,7 +42,7 @@ class Pbvr < Formula
     # system "./configure", "--disable-silent-rules", *std_configure_args
     # system "cmake", "-S", ".", "-B", "build", *std_cmake_args
 
-    ENV["HOMEBREW_KVS_DIR"] = Formula["kvs"].prefix
+    ENV["HOMEBREW_KVS_DIR"] = "#{prefix}"
     ENV["VTK_VERSION"] = "9.3"
     ENV["VTK_INCLUDE_PATH"] = "#{Formula["vtk@9.3.1"].opt_include}/vtk-9.3"
     ENV["VTK_LIB_PATH"] = Formula["vtk@9.3.1"].opt_lib
@@ -54,6 +51,12 @@ class Pbvr < Formula
       next unless File.file?(file)
       next unless File.read(file).include?("KVS_DIR")
       inreplace file, "KVS_DIR", "HOMEBREW_KVS_DIR"
+    end
+
+    # KVSのビルド
+    cd "KVS" do
+      system "make", "-j", ENV.make_jobs
+      system "make", "install"
     end
 
     # サーバのビルド
@@ -70,11 +73,13 @@ class Pbvr < Formula
       system "make", "-j", ENV.make_jobs
       if OS.mac?
         bin.install "App/pbvr_client.app/Contents/MacOS/pbvr_client"
+        cp_r "App/pbvr_client.app/Contents/MacOS/Font", bin
+        cp_r "App/pbvr_client.app/Contents/MacOS/Shader", bin
       else
         bin.install "App/pbvr_client"
+        cp_r "App/Font", bin
+        cp_r "App/Shader", bin
       end
-      cp_r "../Font", bin
-      cp_r "../Shader", bin
     end
   end
 
@@ -82,7 +87,7 @@ class Pbvr < Formula
     <<~EOS
     ===============================================================================
     To use `pbvr_client`, you might need to set the following environment variable:
-    echo 'export HOMEBREW_KVS_DIR=#{Formula["kvs"].prefix}' >> ~/.zshrc
+    echo 'export HOMEBREW_KVS_DIR=#{prefix}' >> ~/.zshrc
     ===============================================================================
     EOS
   end
@@ -116,16 +121,3 @@ index 39906887..ca67db10 100644
 -PBVR_MAKE_KVSML_COMVERTER=0
 +PBVR_MAKE_KVSML_COMVERTER=1
  PBVR_SUPPORT_VTK=0
-
-diff --git a/CS_server/arch/Makefile_machine_gcc_omp b/CS_server/arch/Makefile_machine_gcc_omp
-index 3974aa4..18f6880 100644
---- a/CS_server/arch/Makefile_machine_gcc_omp
-+++ b/CS_server/arch/Makefile_machine_gcc_omp
-@@ -1,6 +1,6 @@
- CXX=g++
- CXXFLAGS=-O3 -fopenmp -march=native -std=c++17
- CC=gcc
--CCFLAGS=-O3 -fopenmp -march=native
-+CCFLAGS=-O3 -fopenmp -fcommon -march=native
- LD=g++
- LDFLAGS=-fopenmp -lstdc++ -static-libgcc -static-libstdc++
