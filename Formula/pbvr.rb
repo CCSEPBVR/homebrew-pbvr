@@ -8,6 +8,14 @@ class Pbvr < Formula
   sha256 "264c82d9e94b6f8477952ce2f80834332dbc9047db694f7f3ba2ab07c7c92aae"
   license ""
 
+  bottle do
+    root_url "https://github.com/CCSEPBVR/homebrew-pbvr/releases/download/v3.5.0"
+    rebuild 1
+    sha256 cellar: :any, arm64_sequoia: "b5974976058e31de3ec13d06e4c392f34415890ccc83569450daca0b250c0105"
+    sha256 cellar: :any, arm64_sonoma: "3e3255b5d67e4448e7c59ad79b105a0cd0e0eb3daf669a23e84110cf4e10ef85"
+    sha256 cellar: :any_skip_relocation, x86_64_linux: "eedce72d94ee9993e9d07ff03d78bce64d730f83066ee255c5799b9dcd25368d"
+  end
+
   # depends_on "cmake" => :build
   depends_on "libomp"
   depends_on "qt@6.2.4"
@@ -21,7 +29,7 @@ class Pbvr < Formula
     end
 
     patch do
-      url "file:///opt/homebrew/Library/Taps/ccsepbvr/homebrew-pbvr/Formula/kvs-conf.patch"
+      url "https://github.com/CCSEPBVR/homebrew-pbvr/releases/download/v3.5.0/kvs-conf.patch"
       sha256 "044808cbc476a1e65b061facf54bbd6ec6abfd62afc8091a7eeec89ccf4bea78"      
     end
   end
@@ -29,7 +37,7 @@ class Pbvr < Formula
   on_linux do
     patch :DATA
     patch do
-      url "file:///home/linuxbrew/.linuxbrew/Homebrew/Library/Taps/ccsepbvr/homebrew-pbvr/Formula/kvs-conf-linux.patch"
+      url "https://github.com/CCSEPBVR/homebrew-pbvr/releases/download/v3.5.0/kvs-conf-linux.patch"
       sha256 "a62f7fb223a262929b0fc529c9fdf6c2f0868bb1385e7716f017b6499c80d82e"
     end
   end

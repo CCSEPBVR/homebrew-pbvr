@@ -8,6 +8,14 @@ class PbvrExtendedFileformat < Formula
   sha256 "264c82d9e94b6f8477952ce2f80834332dbc9047db694f7f3ba2ab07c7c92aae"
   license ""
 
+  bottle do
+    root_url "https://github.com/CCSEPBVR/homebrew-pbvr/releases/download/v3.5.0"
+    rebuild 1
+    sha256 cellar: :any, arm64_sequoia: "215a3430651c27c32168135bceb8549261737b3dcd2b6918735ef4ca293d020b"
+    sha256 cellar: :any, arm64_sonoma: "dafc0101a77955c7175771617bf4aea25b06c9501e81caec4a7fcd2eaf83817d"
+    sha256 cellar: :any_skip_relocation, x86_64_linux: "e3c69672b27506332521e1208b1dc801cb8530277122e9361ecee949d4d0b638"
+  end
+
   # depends_on "cmake" => :build
   depends_on "libomp"
   depends_on "qt@6.2.4"
@@ -27,14 +35,14 @@ class PbvrExtendedFileformat < Formula
     end
 
     patch do
-      url "file:///opt/homebrew/Library/Taps/ccsepbvr/homebrew-pbvr/Formula/kvs-extended-fileformat-conf.patch"
+      url "https://github.com/CCSEPBVR/homebrew-pbvr/releases/download/v3.5.0/kvs-extended-fileformat-conf.patch"
       sha256 "73282577402af87721b1dfed010680feaff02de3a5404beb733bedd5d12ea2cf"    
     end    
   end
 
   on_linux do
     patch do
-      url "file:///home/linuxbrew/.linuxbrew/Homebrew/Library/Taps/ccsepbvr/homebrew-pbvr/Formula/kvs-extended-fileformat-conf-linux.patch"
+      url "https://github.com/CCSEPBVR/homebrew-pbvr/releases/download/v3.5.0/kvs-extended-fileformat-conf-linux.patch"
       sha256 "ccb49e41ffd6ef254b8fb5e2b8265ab69d0fe7316a64f9354876af5f5918f73b"
     end
     patch :DATA
