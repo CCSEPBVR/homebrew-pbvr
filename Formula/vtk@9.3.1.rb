@@ -6,10 +6,9 @@ class VtkAT931 < Formula
   license "BSD-3-Clause"
 
   bottle do
-    root_url "https://github.com/CCSEPBVR/homebrew-pbvr/releases/download/v3.4.0"
-    sha256 cellar: :any, arm64_sonoma: "cd7fe90595bdde9d0ea97dbd6415a03d87cb9cb61568d28f4c86dffb9a255ab6"
-    sha256 cellar: :any, arm64_sequoia: "dba22dad77e7c4addab5381659df2dae97f2759bacb74d91c29961cddda4c784"
-    sha256 cellar: :any_skip_relocation, x86_64_linux: "f8edc723eb922989e2a8410bdf6aed49bfbf8be04f825532ded55bd4f8416207"
+    root_url "file:///Users/user/Work/homebrew-pbvr/Bottle"
+    rebuild 1
+    sha256 cellar: :any, arm64_tahoe: "a5ce2845df8d24c7a6723c264413852f73e880ba6d1207cc9d8f7ad8880793f3"
   end
 
   depends_on "cmake" => [:build]
@@ -99,3 +98,44 @@ index dcf4a399..dbce107d 100644
  
  // The number of characters to store in the basic_memory_buffer object itself
  // to avoid dynamic memory allocation.
+
+diff --git a/ThirdParty/zlib/vtkzlib/gzguts.h b/ThirdParty/zlib/vtkzlib/gzguts.h
+index 57faf371..c9a417e6 100644
+--- a/ThirdParty/zlib/vtkzlib/gzguts.h
++++ b/ThirdParty/zlib/vtkzlib/gzguts.h
+@@ -18,6 +18,7 @@
+ #  define ZLIB_INTERNAL
+ #endif
+ 
++#undef fdopen
+ #include <stdio.h>
+ #include "zlib.h"
+ #ifdef STDC
+
+diff --git a/ThirdParty/png/vtkpng/pngpriv.h b/ThirdParty/png/vtkpng/pngpriv.h
+index aecf625c..0b058a3f 100644
+--- a/ThirdParty/png/vtkpng/pngpriv.h
++++ b/ThirdParty/png/vtkpng/pngpriv.h
+@@ -523,7 +523,7 @@
+ #  include <float.h>
+ 
+ #  if (defined(__MWERKS__) && defined(macintosh)) || defined(applec) || \
+-    defined(THINK_C) || defined(__SC__) || defined(TARGET_OS_MAC)
++    defined(THINK_C) || defined(__SC__) || (defined(TARGET_OS_MAC) && !defined(__APPLE__))
+    /* We need to check that <math.h> hasn't already been included earlier
+     * as it seems it doesn't agree with <fp.h>, yet we should really use
+     * <fp.h> if possible.
+
+diff --git a/Utilities/octree/octree/octree_node.txx b/Utilities/octree/octree/octree_node.txx
+index 6971c7c1..5f12bb7d 100644
+--- a/Utilities/octree/octree/octree_node.txx
++++ b/Utilities/octree/octree/octree_node.txx
+@@ -210,7 +210,7 @@ const octree_node<T_, d_, A_>& octree_node<T_, d_, A_>::operator[](int child) co
+   {
+     throw std::domain_error("Attempt to access children of an octree leaf node.");
+   }
+-  return this->_M_chilren[child];
++  return this->m_children[child];
+ }
+ 
+ /**\brief Return a reference to a child node.

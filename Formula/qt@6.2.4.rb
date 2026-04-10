@@ -12,10 +12,9 @@ class QtAT624 < Formula
   ]
 
   bottle do
-    root_url "https://github.com/CCSEPBVR/homebrew-pbvr/releases/download/v3.4.0"
-    sha256 cellar: :any, arm64_sonoma: "e6c82434b5d66ae409d2be9eff53dd5dc43d4f949b3dffe90196973fd6b62b67"
-    sha256 cellar: :any, arm64_sequoia: "efba8a268795a91297cf050ae233cb9a5f01ceeed0808b61406ddd8599df1f96"
-    sha256 cellar: :any_skip_relocation, x86_64_linux: "03089037dd0fccdb66bc9899c52e704d9c60acffef6ad3856d2cad7d0d0a4730"
+    root_url "file:///Users/user/Work/homebrew-pbvr/Bottle"
+    rebuild 1
+    sha256 cellar: :any, arm64_tahoe: "1000126f7401146b446e879962f8a6dec99d0128342138e799d44449dd409415"
   end
 
   depends_on "cmake" => [:build]
@@ -133,36 +132,94 @@ index 4441625237..7afc1cf1fa 100644
      {
 
 diff --git a/qtbase/cmake/FindWrapOpenGL.cmake b/qtbase/cmake/FindWrapOpenGL.cmake
-index 91d8b77c12..bdbf1aa8db 100644
+index 7632ed8a90..db63b352ff 100644
 --- a/qtbase/cmake/FindWrapOpenGL.cmake
 +++ b/qtbase/cmake/FindWrapOpenGL.cmake
-@@ -14,14 +14,18 @@ if (OpenGL_FOUND)
- 
-     add_library(WrapOpenGL::WrapOpenGL INTERFACE IMPORTED)
-     if(APPLE)
-+        # CMake 3.27 and older:
-         # On Darwin platforms FindOpenGL sets IMPORTED_LOCATION to the absolute path of the library
-         # within the framework. This ends up as an absolute path link flag, which we don't want,
-         # because that makes our .prl files un-relocatable.
-         # Extract the framework path instead, and use that in INTERFACE_LINK_LIBRARIES,
+@@ -1,49 +1,24 @@
+-# We can't create the same interface imported target multiple times, CMake will complain if we do
+-# that. This can happen if the find_package call is done in multiple different subdirectories.
+-if(TARGET WrapOpenGL::WrapOpenGL)
+-    set(WrapOpenGL_FOUND ON)
+-    return()
+-endif()
+-
+-set(WrapOpenGL_FOUND OFF)
+-
+-find_package(OpenGL ${WrapOpenGL_FIND_VERSION})
+-
+-if (OpenGL_FOUND)
+-    set(WrapOpenGL_FOUND ON)
+-
+-    add_library(WrapOpenGL::WrapOpenGL INTERFACE IMPORTED)
+-    if(APPLE)
+-        # On Darwin platforms FindOpenGL sets IMPORTED_LOCATION to the absolute path of the library
+-        # within the framework. This ends up as an absolute path link flag, which we don't want,
+-        # because that makes our .prl files un-relocatable.
+-        # Extract the framework path instead, and use that in INTERFACE_LINK_LIBRARIES,
 -        # which CMake ends up transforming into a reloctable -framework flag.
-+        # which CMake ends up transforming into a relocatable -framework flag.
-         # See https://gitlab.kitware.com/cmake/cmake/-/issues/20871 for details.
-+        #
-+        # CMake 3.28 and above:
-+        # IMPORTED_LOCATION is the absolute path the the OpenGL.framework folder.
-         get_target_property(__opengl_fw_lib_path OpenGL::GL IMPORTED_LOCATION)
+-        # See https://gitlab.kitware.com/cmake/cmake/-/issues/20871 for details.
+-        get_target_property(__opengl_fw_lib_path OpenGL::GL IMPORTED_LOCATION)
 -        if(__opengl_fw_lib_path)
-+        if(__opengl_fw_lib_path AND NOT __opengl_fw_lib_path MATCHES "/([^/]+)\\.framework$")
-             get_filename_component(__opengl_fw_path "${__opengl_fw_lib_path}" DIRECTORY)
-         endif()
-
-@@ -41,7 +45,7 @@ if (OpenGL_FOUND)
-         target_link_libraries(WrapOpenGL::WrapOpenGL INTERFACE ${__opengl_fw_path})
-         target_link_libraries(WrapOpenGL::WrapOpenGL INTERFACE ${__opengl_agl_fw_path})
-     else()
+-            get_filename_component(__opengl_fw_path "${__opengl_fw_lib_path}" DIRECTORY)
+-        endif()
+-
+-        if(NOT __opengl_fw_path)
+-            # Just a safety measure in case if no OpenGL::GL target exists.
+-            set(__opengl_fw_path "-framework OpenGL")
+-        endif()
+-
+-        find_library(WrapOpenGL_AGL NAMES AGL)
+-        if(WrapOpenGL_AGL)
+-            set(__opengl_agl_fw_path "${WrapOpenGL_AGL}")
+-        endif()
+-        if(NOT __opengl_agl_fw_path)
+-            set(__opengl_agl_fw_path "-framework AGL")
+-        endif()
+-
+-        target_link_libraries(WrapOpenGL::WrapOpenGL INTERFACE ${__opengl_fw_path})
+-        target_link_libraries(WrapOpenGL::WrapOpenGL INTERFACE ${__opengl_agl_fw_path})
+-    else()
 -        target_link_libraries(WrapOpenGL::WrapOpenGL INTERFACE OpenGL::GL)
-+        target_link_libraries(WrapOpenGL::WrapOpenGL INTERFACE "-lGL")
-     endif()
- endif()
+-    endif()
+-endif()
+-
+-include(FindPackageHandleStandardArgs)
+-find_package_handle_standard_args(WrapOpenGL DEFAULT_MSG WrapOpenGL_FOUND)
++# We can't create the same interface imported target multiple times, CMake will complain if we do
++# that. This can happen if the find_package call is done in multiple different subdirectories.
++if(TARGET WrapOpenGL::WrapOpenGL)
++    set(WrapOpenGL_FOUND ON)
++    return()
++endif()
++
++set(WrapOpenGL_FOUND OFF)
++
++find_package(OpenGL ${WrapOpenGL_FIND_VERSION})
++
++if (OpenGL_FOUND)
++    set(WrapOpenGL_FOUND ON)
++
++    add_library(WrapOpenGL::WrapOpenGL INTERFACE IMPORTED)
++    if(APPLE)
++        target_link_libraries(WrapOpenGL::WrapOpenGL INTERFACE "-framework OpenGL")
++    else()
++        target_link_libraries(WrapOpenGL::WrapOpenGL INTERFACE OpenGL::GL)
++    endif()
++endif()
++
++include(FindPackageHandleStandardArgs)
++find_package_handle_standard_args(WrapOpenGL DEFAULT_MSG WrapOpenGL_FOUND)
 
+diff --git a/qtbase/src/3rdparty/libpng/pngpriv.h b/qtbase/src/3rdparty/libpng/pngpriv.h
+index 0b8070fbf4..0dd559d581 100644
+--- a/qtbase/src/3rdparty/libpng/pngpriv.h
++++ b/qtbase/src/3rdparty/libpng/pngpriv.h
+@@ -529,7 +529,7 @@
+ #  include <float.h>
+ 
+ #  if (defined(__MWERKS__) && defined(macintosh)) || defined(applec) || \
+-    defined(THINK_C) || defined(__SC__) || defined(TARGET_OS_MAC)
++    defined(THINK_C) || defined(__SC__) || (defined(TARGET_OS_MAC) && !defined(__APPLE__))
+    /* We need to check that <math.h> hasn't already been included earlier
+     * as it seems it doesn't agree with <fp.h>, yet we should really use
+     * <fp.h> if possible.

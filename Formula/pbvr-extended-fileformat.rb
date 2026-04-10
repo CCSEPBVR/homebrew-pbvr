@@ -4,20 +4,18 @@
 class PbvrExtendedFileformat < Formula
   desc ""
   homepage "https://github.com/CCSEPBVR/CS-IS-PBVR"
-  url "https://github.com/CCSEPBVR/CS-IS-PBVR/archive/refs/tags/v3.5.0.tar.gz"
-  sha256 "264c82d9e94b6f8477952ce2f80834332dbc9047db694f7f3ba2ab07c7c92aae"
+  url "https://github.com/CCSEPBVR/CS-IS-PBVR/archive/refs/tags/v3.6.0.tar.gz"
+  sha256 "bfb433c6bca35efd452031458221b389433760a8ee6ff7b930668895d35ae3f8"
   license ""
 
   bottle do
-    root_url "https://github.com/CCSEPBVR/homebrew-pbvr/releases/download/v3.5.0"
-    rebuild 1
-    sha256 cellar: :any, arm64_sequoia: "215a3430651c27c32168135bceb8549261737b3dcd2b6918735ef4ca293d020b"
-    sha256 cellar: :any, arm64_sonoma: "dafc0101a77955c7175771617bf4aea25b06c9501e81caec4a7fcd2eaf83817d"
-    sha256 cellar: :any_skip_relocation, x86_64_linux: "e3c69672b27506332521e1208b1dc801cb8530277122e9361ecee949d4d0b638"
+    root_url "file:///Users/user/Work/homebrew-pbvr/Bottle"
+    sha256 cellar: :any, arm64_tahoe: "acd16d2720838b91d38484bf69cba6120e51508955fa4d973766e8f4a33e3376"
   end
 
   # depends_on "cmake" => :build
   depends_on "libomp"
+  depends_on "uwebsockets"
   depends_on "qt@6.2.4"
   depends_on "vtk@9.3.1"
   depends_on "freeglut"
@@ -30,14 +28,14 @@ class PbvrExtendedFileformat < Formula
 
   on_macos do
     patch do
-      url "https://github.com/CCSEPBVR/homebrew-pbvr/releases/download/v3.4.0/pbvr-conf-mac.patch"
-      sha256 "845961faab9393e11dba2f62050ea258cca06d6a51264c6d7a9a99ac589c8f05"
+      url "file:///Users/user/Work/homebrew-pbvr/Formula/kvs-extended-fileformat-conf-mac.patch"
+      sha256 "b9276a86f2115018a9d4d3149707fb2a19717ead0d0fc72d8a397f524bd7c465"
     end
 
     patch do
-      url "https://github.com/CCSEPBVR/homebrew-pbvr/releases/download/v3.5.0/kvs-extended-fileformat-conf.patch"
-      sha256 "73282577402af87721b1dfed010680feaff02de3a5404beb733bedd5d12ea2cf"    
-    end    
+      url "file:///Users/user/Work/homebrew-pbvr/Formula/pbvr-makefile-uwebsockets.patch"
+      sha256 "5f7e3e42385113cb5274a76d376c2e507a9dd7ca0ff801fa117cb836ba773455"
+    end
   end
 
   on_linux do
@@ -58,11 +56,24 @@ class PbvrExtendedFileformat < Formula
     ENV["VTK_VERSION"] = "9.3"
     ENV["VTK_INCLUDE_PATH"] = "#{Formula["vtk@9.3.1"].opt_include}/vtk-9.3"
     ENV["VTK_LIB_PATH"] = Formula["vtk@9.3.1"].opt_lib
+    ENV["UWS_INCLUDE_PATH"] = Formula["uwebsockets"].opt_include
+    ENV["UWS_LIB_PATH"] = Formula["uwebsockets"].opt_lib
 
     Dir["**/*"].each do |file|
       next unless File.file?(file)
       next unless File.read(file).include?("KVS_DIR")
       inreplace file, "KVS_DIR", "HOMEBREW_KVS_DIR"
+    end
+
+    Dir["KVS/**/*.{h,hpp,cpp,cc,cxx}"].each do |file|
+      next unless File.file?(file)
+
+      contents = File.binread(file)
+      text = contents.force_encoding("UTF-8")
+      next unless text.valid_encoding?
+      next unless text.match?(/(?<!std::)\bsize_t\b/)
+
+      inreplace file, /(?<!std::)\bsize_t\b/, "std::size_t"
     end
 
     # KVSのビルド
@@ -72,10 +83,13 @@ class PbvrExtendedFileformat < Formula
     end
 
     # サーバのビルド
-    system "make", "-C", "CS_server", "-j", ENV.make_jobs
-    bin.install "CS_server/pbvr_server"
-    bin.install "CS_server/Filter/pbvr_filter"
-    bin.install "CS_server/KVSMLConverter/Example/Release/kvsml-converter"
+    system "make", "third", "-C", "Server", "-j", ENV.make_jobs
+    system "make", "-C", "Server", "-j", ENV.make_jobs
+    system "make", "-C", "Server/Filter", "-j", ENV.make_jobs
+    system "make", "-C", "Server/KVSMLConverter", "-j", ENV.make_jobs
+    bin.install "Server/pbvr_server"
+    bin.install "Server/Filter/pbvr_filter"
+    bin.install "Server/KVSMLConverter/Example/Release/kvsml-converter"
 
     # クライアントのビルド
     mkdir "Client/build" do
