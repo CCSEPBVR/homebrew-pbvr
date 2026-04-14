@@ -12,15 +12,19 @@ class QtAT624 < Formula
   ]
 
   bottle do
-    root_url "file:///Users/user/Work/homebrew-pbvr/Bottle"
+    root_url "file:///home/user/homebrew-pbvr/Bottle"
     rebuild 1
     sha256 cellar: :any, arm64_tahoe: "1000126f7401146b446e879962f8a6dec99d0128342138e799d44449dd409415"
+    sha256 cellar: :any_skip_relocation, x86_64_linux: "26f0bf8b8f8108ee4d78c82b33acd1407a8aa3462fecd6f17c0d043e11a26607"
   end
 
   depends_on "cmake" => [:build]
   depends_on "python" => [:build]
   depends_on "openssl@3"
-  depends_on xcode: :build
+
+  on_macos do
+    depends_on xcode: :build
+  end
 
   on_linux do
     depends_on "gcc" => [:build]
@@ -61,6 +65,8 @@ class QtAT624 < Formula
         -DQT_BUILD_EXAMPLES_BY_DEFAULT=OFF
         -DBUILD_qtwebengine=OFF
         -DBUILD_qttranslations=OFF
+        -DBUILD_qt3d=OFF
+        -DBUILD_qtquick3d=OFF
       ]
 
       if OS.linux?

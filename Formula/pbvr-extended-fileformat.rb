@@ -9,11 +9,13 @@ class PbvrExtendedFileformat < Formula
   license ""
 
   bottle do
-    root_url "file:///Users/user/Work/homebrew-pbvr/Bottle"
+    root_url "file:///home/user/homebrew-pbvr/Bottle"
     sha256 cellar: :any, arm64_tahoe: "acd16d2720838b91d38484bf69cba6120e51508955fa4d973766e8f4a33e3376"
+    sha256 cellar: :any_skip_relocation, x86_64_linux: "76fa3ed4acb6cf3a0b83bb5d21f9db19d196b462c648d4732b1f1b47526b4eb0"
   end
 
   # depends_on "cmake" => :build
+  depends_on "gcc"
   depends_on "libomp"
   depends_on "uwebsockets"
   depends_on "qt@6.2.4"
@@ -26,24 +28,21 @@ class PbvrExtendedFileformat < Formula
   #   sha256 ""
   # end
 
-  on_macos do
-    patch do
-      url "file:///Users/user/Work/homebrew-pbvr/Formula/kvs-extended-fileformat-conf-mac.patch"
-      sha256 "b9276a86f2115018a9d4d3149707fb2a19717ead0d0fc72d8a397f524bd7c465"
-    end
+  patch do
+    url "file:///home/user/homebrew-pbvr/Formula/pbvr-makefile-uwebsockets.patch"
+    sha256 "01637abfb9e341650907fa0b0a8f746a1dd93eef620af53c1c1e20bcd0ec0fe2"
+  end
 
-    patch do
-      url "file:///Users/user/Work/homebrew-pbvr/Formula/pbvr-makefile-uwebsockets.patch"
-      sha256 "5f7e3e42385113cb5274a76d376c2e507a9dd7ca0ff801fa117cb836ba773455"
-    end
+  patch do
+    url "file:///home/user/homebrew-pbvr/Formula/kvs-extended-fileformat-conf-mac.patch"
+    sha256 "106723ef211f8cb3571e60dfac663baae0ed8885d70948449ce61a8c076c32ec"
   end
 
   on_linux do
     patch do
-      url "https://github.com/CCSEPBVR/homebrew-pbvr/releases/download/v3.5.0/kvs-extended-fileformat-conf-linux.patch"
-      sha256 "ccb49e41ffd6ef254b8fb5e2b8265ab69d0fe7316a64f9354876af5f5918f73b"
+      url "file:///home/user/homebrew-pbvr/Formula/pbvr-conf-linux.patch"
+      sha256 "3c96cc094418e187e08bd930e2ad31c9dd32c3059139476d6376ecd0e009a4bd"
     end
-    patch :DATA
   end
 
   def install
@@ -58,6 +57,7 @@ class PbvrExtendedFileformat < Formula
     ENV["VTK_LIB_PATH"] = Formula["vtk@9.3.1"].opt_lib
     ENV["UWS_INCLUDE_PATH"] = Formula["uwebsockets"].opt_include
     ENV["UWS_LIB_PATH"] = Formula["uwebsockets"].opt_lib
+    ENV["OPENSSL_LIB_PATH"] = Formula["openssl@3"].opt_lib
 
     Dir["**/*"].each do |file|
       next unless File.file?(file)
@@ -74,6 +74,14 @@ class PbvrExtendedFileformat < Formula
       next unless text.match?(/(?<!std::)\bsize_t\b/)
 
       inreplace file, /(?<!std::)\bsize_t\b/, "std::size_t"
+    end
+
+    Dir["KVS/**/*.{h,hpp,cpp,cc,cxx}"].each do |file|
+      text = File.read(file)
+      next if text.include?("#include <cstdint>")
+      new_text = text.sub(/^(#include )/, "#include <cstdint>\n\\1")
+
+      File.write(file, new_text)
     end
 
     # KVSのビルド
@@ -129,20 +137,3 @@ class PbvrExtendedFileformat < Formula
     system "false"
   end
 end
-
-__END__
-diff --git a/CS_server/pbvr.conf b/CS_server/pbvr.conf
-index 39906887..ca67db10 100644
---- a/CS_server/pbvr.conf
-+++ b/CS_server/pbvr.conf
-@@ -1,7 +1,7 @@
- #PBVR_MACHINE=Makefile_machine_gcc_mpi_omp
- #PBVR_MACHINE=Makefile_machine_s86_omp
--PBVR_MACHINE=Makefile_machine_mac_gcc_omp
-+PBVR_MACHINE=Makefile_machine_gcc_omp
- PBVR_MAKE_FILTER=1
- PBVR_MAKE_SERVER=1
--PBVR_MAKE_KVSML_COMVERTER=0
-+PBVR_MAKE_KVSML_COMVERTER=1
- PBVR_SUPPORT_VTK=0
-

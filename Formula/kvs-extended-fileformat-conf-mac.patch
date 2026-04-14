@@ -1,5 +1,5 @@
 diff --git a/KVS/kvs.conf b/KVS/kvs.conf
-index fb0a763..752af87 100644
+index fb0a7636..752af875 100644
 --- a/KVS/kvs.conf
 +++ b/KVS/kvs.conf
 @@ -4,7 +4,7 @@
@@ -10,7 +10,7 @@ index fb0a763..752af87 100644
 +KVS_ENABLE_GLEW                  = 0
  KVS_ENABLE_OPENMP                = 0
  KVS_ENABLE_DEPRECATED            = 0
- 
+
 @@ -14,9 +14,9 @@ KVS_SUPPORT_GLFW                 = 0
  KVS_SUPPORT_FFMPEG               = 0
  KVS_SUPPORT_OPENCV               = 0

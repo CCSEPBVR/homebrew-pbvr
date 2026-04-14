@@ -1,0 +1,12 @@
+diff --git a/Server/pbvr.conf b/Server/pbvr.conf
+index 6f8248dd..faf32abb 100644
+--- a/Server/pbvr.conf
++++ b/Server/pbvr.conf
+@@ -1,6 +1,6 @@
+ #PBVR_MACHINE=Makefile_machine_gcc_mpi_omp
+ #PBVR_MACHINE=Makefile_machine_s86_mpi_omp
+-PBVR_MACHINE=Makefile_machine_mac_gcc_omp
++PBVR_MACHINE=Makefile_machine_gcc_omp
+ PBVR_MAKE_FILTER=1
+ PBVR_MAKE_SERVER=1
+ PBVR_MAKE_KVSML_COMVERTER=0

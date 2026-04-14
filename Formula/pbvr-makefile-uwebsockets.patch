@@ -1,5 +1,5 @@
 diff --git a/Server/Makefile b/Server/Makefile
-index 9a80172..6bf6158 100644
+index 9a80172c..ff799df3 100644
 --- a/Server/Makefile
 +++ b/Server/Makefile
 @@ -120,9 +120,9 @@ LINK_LIBRARY += -ldl
@@ -7,10 +7,11 @@ index 9a80172..6bf6158 100644
  # uWebSockets
  #=============================================================================
 -INCLUDE_PATH += -I$(KVS_UWS_DIR)/src -I$(KVS_UWS_DIR)/uSockets/src
-+INCLUDE_PATH += -I$(UWS_INCLUDE_PATH) -I$(UWS_INCLUDE_PATH)/uSockets
- LIBRARY_PATH += -L/opt/homebrew/opt/openssl@3/lib
+-LIBRARY_PATH += -L/opt/homebrew/opt/openssl@3/lib
 -LINK_LIBRARY += $(KVS_UWS_DIR)/uSockets/uSockets.a -lssl -lcrypto -lz
-+LINK_LIBRARY += $(UWS_LIB_PATH)/uSockets.a -lssl -lcrypto -lz
- 
++INCLUDE_PATH += -I$(UWS_INCLUDE_PATH) -I$(UWS_INCLUDE_PATH)/uSockets
++LIBRARY_PATH += -L$(OPENSSL_LIB_PATH)
++LINK_LIBRARY += -Wl,-start-group $(UWS_LIB_PATH)/uSockets.a -Wl,-end-group -lssl -lcrypto -lz
+
  #=========================================================
  # VPATH（検索パス）設定
