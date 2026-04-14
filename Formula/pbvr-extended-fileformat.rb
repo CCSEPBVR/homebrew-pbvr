@@ -9,7 +9,7 @@ class PbvrExtendedFileformat < Formula
   license ""
 
   bottle do
-    root_url "file:///home/user/homebrew-pbvr/Bottle"
+    root_url "https://github.com/CCSEPBVR/homebrew-pbvr/releases/download/v3.6.0"
     sha256 cellar: :any, arm64_tahoe: "acd16d2720838b91d38484bf69cba6120e51508955fa4d973766e8f4a33e3376"
     sha256 cellar: :any_skip_relocation, x86_64_linux: "76fa3ed4acb6cf3a0b83bb5d21f9db19d196b462c648d4732b1f1b47526b4eb0"
   end
@@ -29,18 +29,18 @@ class PbvrExtendedFileformat < Formula
   # end
 
   patch do
-    url "file:///home/user/homebrew-pbvr/Formula/pbvr-makefile-uwebsockets.patch"
+    url "https://github.com/CCSEPBVR/homebrew-pbvr/releases/download/v3.6.0/pbvr-makefile-uwebsockets.patch"
     sha256 "01637abfb9e341650907fa0b0a8f746a1dd93eef620af53c1c1e20bcd0ec0fe2"
   end
 
   patch do
-    url "file:///home/user/homebrew-pbvr/Formula/kvs-extended-fileformat-conf-mac.patch"
+    url "https://github.com/CCSEPBVR/homebrew-pbvr/releases/download/v3.6.0/kvs-extended-fileformat-conf-mac.patch"
     sha256 "106723ef211f8cb3571e60dfac663baae0ed8885d70948449ce61a8c076c32ec"
   end
 
   on_linux do
     patch do
-      url "file:///home/user/homebrew-pbvr/Formula/pbvr-conf-linux.patch"
+      url "https://github.com/CCSEPBVR/homebrew-pbvr/releases/download/v3.6.0/pbvr-conf-linux.patch"
       sha256 "3c96cc094418e187e08bd930e2ad31c9dd32c3059139476d6376ecd0e009a4bd"
     end
   end

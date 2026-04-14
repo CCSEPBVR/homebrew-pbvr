@@ -6,7 +6,7 @@ class Uwebsockets < Formula
     license "Apache-2.0"
 
     bottle do
-        root_url "file:///home/user/homebrew-pbvr/Bottle"
+        root_url "https://github.com/CCSEPBVR/homebrew-pbvr/releases/download/v3.6.0"
         sha256 cellar: :any_skip_relocation, arm64_tahoe: "7ab3dec288955128a1a652f1058aad31c3fb0ce310013c4b7dfb1be72f4a7977"
         sha256 cellar: :any_skip_relocation, x86_64_linux: "85de40a29bc94abf6c09fddb1bec370d01a1568b862a7722620e875fb26b7ee2"
     end

@@ -9,7 +9,7 @@ class Pbvr < Formula
   license ""
 
   bottle do
-    root_url "file:///home/user/homebrew-pbvr/Bottle"
+    root_url "https://github.com/CCSEPBVR/homebrew-pbvr/releases/download/v3.6.0"
     sha256 cellar: :any, arm64_tahoe: "fcf9333648adcd9c4e0ac89a7a27e8f6277d04ef59dbffa53125991a04331bb9"
     sha256 cellar: :any_skip_relocation, x86_64_linux: "9272210a39962c561188491de30a04091a9fdc5a95161c5830a883b197512ad7"
   end
@@ -23,18 +23,18 @@ class Pbvr < Formula
   depends_on "freeglut"
 
   patch do
-    url "file:///home/user/homebrew-pbvr/Formula/pbvr-makefile-uwebsockets.patch"
+    url "https://github.com/CCSEPBVR/homebrew-pbvr/releases/download/v3.6.0/pbvr-makefile-uwebsockets.patch"
     sha256 "01637abfb9e341650907fa0b0a8f746a1dd93eef620af53c1c1e20bcd0ec0fe2"
   end
 
   patch do
-    url "file:///home/user/homebrew-pbvr/Formula/kvs-conf-mac.patch"
+    url "https://github.com/CCSEPBVR/homebrew-pbvr/releases/download/v3.6.0/kvs-conf-mac.patch"
     sha256 "41ed91ddecf462ea10fb6fa4347a1692be6ad41436cfe91c9eaa4f3149ad9610"
   end
 
   on_linux do
     patch do
-      url "file:///home/user/homebrew-pbvr/Formula/pbvr-conf-linux.patch"
+      url "https://github.com/CCSEPBVR/homebrew-pbvr/releases/download/v3.6.0/pbvr-conf-linux.patch"
       sha256 "3c96cc094418e187e08bd930e2ad31c9dd32c3059139476d6376ecd0e009a4bd"
     end
   end

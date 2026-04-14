@@ -6,7 +6,7 @@ class VtkAT931 < Formula
   license "BSD-3-Clause"
 
   bottle do
-    root_url "file:///home/user/homebrew-pbvr/Bottle"
+    root_url "https://github.com/CCSEPBVR/homebrew-pbvr/releases/download/v3.6.0"
     rebuild 1
     sha256 cellar: :any, arm64_tahoe: "a5ce2845df8d24c7a6723c264413852f73e880ba6d1207cc9d8f7ad8880793f3"
     sha256 cellar: :any_skip_relocation, x86_64_linux: "856169cbbc241bbf7c4c44e99c4a1da1e39ce70d7539ac9f5478e39c90379ac2"
