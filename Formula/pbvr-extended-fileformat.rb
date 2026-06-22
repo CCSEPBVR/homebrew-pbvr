@@ -35,6 +35,13 @@ class PbvrExtendedFileformat < Formula
     end
   end
 
+  on_linux do
+    patch do
+      url "https://github.com/CCSEPBVR/homebrew-pbvr/releases/download/v3.6.1/pbvr-linux-extended-fileformat.patch"
+      sha256 "11fc87948551d7383fe6213b4a4a25fbbd85a78efb5d1df92a4dba24d2f5fd75"
+    end
+  end
+
   def install
     # Remove unrecognized options if they cause configure to fail
     # https://rubydoc.brew.sh/Formula.html#std_configure_args-instance_method

@@ -28,6 +28,13 @@ class Pbvr < Formula
     end
   end
 
+  on_linux do
+    patch do
+      url "https://github.com/CCSEPBVR/homebrew-pbvr/releases/download/v3.6.1/pbvr-linux.patch"
+      sha256 "6e041935dc470bebc419d16891ca0771082570c40d001fb69e35fca7d9416126"
+    end
+  end
+
   # Additional dependency
   # resource "" do
   #   url ""
