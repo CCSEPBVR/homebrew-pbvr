@@ -5,18 +5,17 @@ class Uwebsockets < Formula
     sha256 "2a97c2dff34d15d6f6771e35c8016483d3871201ad5921167f31e7d6e2fd72e6"
     license "Apache-2.0"
 
-    bottle do
-        root_url "https://github.com/CCSEPBVR/homebrew-pbvr/releases/download/v3.6.0"
-        sha256 cellar: :any_skip_relocation, arm64_tahoe: "7ab3dec288955128a1a652f1058aad31c3fb0ce310013c4b7dfb1be72f4a7977"
-        sha256 cellar: :any_skip_relocation, x86_64_linux: "85de40a29bc94abf6c09fddb1bec370d01a1568b862a7722620e875fb26b7ee2"
-    end
+  bottle do
+    root_url "https://github.com/CCSEPBVR/homebrew-pbvr/releases/download/v3.6.1"
+    rebuild 1
+    sha256 cellar: :any_skip_relocation, arm64_tahoe: "5b595a55e22f02f80f30a8113dcd18dc8e7a335aa40556ef4b2a9c1c68ff69d5"
+  end
 
     resource "uSockets" do
         url "https://github.com/uNetworking/uSockets/archive/refs/tags/v0.8.8.tar.gz"
         sha256 "d14d2efe1df767dbebfb8d6f5b52aa952faf66b30c822fbe464debaa0c5c0b17"
     end
 
-    depends_on "gcc" => :build
     depends_on "openssl@3"
 
     def install
@@ -31,7 +30,7 @@ class Uwebsockets < Formula
                 "WITH_LTO=0",
                 "WITH_OPENSSL=1",
                 "CCFLAGS=-I#{Formula["openssl@3"].opt_include}",
-                "CXXFLAGS=-ffat-lto-objects -I#{Formula["openssl@3"].opt_include}",
+                "CXXFLAGS=-I#{Formula["openssl@3"].opt_include}",
                 "LDFLAGS=-L#{Formula["openssl@3"].opt_lib}"
         end
 

@@ -1,0 +1,53 @@
+diff --git a/KVS/kvs.conf b/KVS/kvs.conf
+index fb0a763..752af87 100644
+--- a/KVS/kvs.conf
++++ b/KVS/kvs.conf
+@@ -4,7 +4,7 @@
+ #=============================================================================
+ KVS_ENABLE_OPENGL                = 1
+ KVS_ENABLE_GLU                   = 1
+-KVS_ENABLE_GLEW                  = 1
++KVS_ENABLE_GLEW                  = 0
+ KVS_ENABLE_OPENMP                = 0
+ KVS_ENABLE_DEPRECATED            = 0
+ 
+@@ -14,9 +14,9 @@ KVS_SUPPORT_GLFW                 = 0
+ KVS_SUPPORT_FFMPEG               = 0
+ KVS_SUPPORT_OPENCV               = 0
+ KVS_SUPPORT_QT                   = 1
+-KVS_SUPPORT_OPENXR               = 1
++KVS_SUPPORT_OPENXR               = 0
+ KVS_SUPPORT_PYTHON               = 0
+ KVS_SUPPORT_MPI                  = 0
+ KVS_SUPPORT_EGL                  = 0
+ KVS_SUPPORT_OSMESA               = 0
+-KVS_SUPPORT_EXTENDED_FILE_FORMAT = 0
++KVS_SUPPORT_EXTENDED_FILE_FORMAT = 1
+diff --git a/Server/Makefile b/Server/Makefile
+index 53910d3..be29cdd 100644
+--- a/Server/Makefile
++++ b/Server/Makefile
+@@ -130,9 +130,9 @@ endif
+ #=============================================================================
+ # uWebSockets
+ #=============================================================================
+-INCLUDE_PATH += -I$(KVS_UWS_DIR)/src -I$(KVS_UWS_DIR)/uSockets/src
+-LIBRARY_PATH += -L/opt/homebrew/opt/openssl@3/lib
+-LINK_LIBRARY += $(KVS_UWS_DIR)/uSockets/uSockets.a -lssl -lcrypto -lz
++INCLUDE_PATH += -I$(UWS_INCLUDE_PATH) -I$(UWS_INCLUDE_PATH)/uSockets
++LIBRARY_PATH += -L$(OPENSSL_LIB_PATH)
++LINK_LIBRARY += $(UWS_LIB_PATH)/uSockets.a -lssl -lcrypto -lz
+ 
+ #=========================================================
+ # VPATH（検索パス）設定
+diff --git a/Server/pbvr.conf b/Server/pbvr.conf
+index 6f8248d..60965f3 100644
+--- a/Server/pbvr.conf
++++ b/Server/pbvr.conf
+@@ -3,5 +3,5 @@
+ PBVR_MACHINE=Makefile_machine_mac_gcc_omp
+ PBVR_MAKE_FILTER=1
+ PBVR_MAKE_SERVER=1
+-PBVR_MAKE_KVSML_COMVERTER=0
++PBVR_MAKE_KVSML_COMVERTER=1
+ PBVR_SUPPORT_VTK=0

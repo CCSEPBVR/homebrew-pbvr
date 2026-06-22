@@ -6,10 +6,9 @@ class VtkAT931 < Formula
   license "BSD-3-Clause"
 
   bottle do
-    root_url "https://github.com/CCSEPBVR/homebrew-pbvr/releases/download/v3.6.0"
-    rebuild 1
-    sha256 cellar: :any, arm64_tahoe: "a5ce2845df8d24c7a6723c264413852f73e880ba6d1207cc9d8f7ad8880793f3"
-    sha256 cellar: :any_skip_relocation, x86_64_linux: "856169cbbc241bbf7c4c44e99c4a1da1e39ce70d7539ac9f5478e39c90379ac2"
+    root_url "https://github.com/CCSEPBVR/homebrew-pbvr/releases/download/v3.6.1"
+    rebuild 2
+    sha256 cellar: :any, arm64_tahoe: "13a59136c4236ea34407f77363414d578991d70c9a3b0df944414445cf9edb56"
   end
 
   depends_on "cmake" => [:build]

@@ -4,38 +4,27 @@
 class Pbvr < Formula
   desc ""
   homepage "https://github.com/CCSEPBVR/CS-IS-PBVR"
-  url "https://github.com/CCSEPBVR/CS-IS-PBVR/archive/refs/tags/v3.6.0.tar.gz"
-  sha256 "bfb433c6bca35efd452031458221b389433760a8ee6ff7b930668895d35ae3f8"
+  url "https://github.com/CCSEPBVR/CS-IS-PBVR/archive/refs/tags/v3.6.1.tar.gz"
+  sha256 "707d6bce659cb5b6980d87a84b2ae6546006f777a8119666f6fde9887e60dd49"
   license ""
 
   bottle do
-    root_url "https://github.com/CCSEPBVR/homebrew-pbvr/releases/download/v3.6.0"
-    sha256 cellar: :any, arm64_tahoe: "fcf9333648adcd9c4e0ac89a7a27e8f6277d04ef59dbffa53125991a04331bb9"
-    sha256 cellar: :any_skip_relocation, x86_64_linux: "9272210a39962c561188491de30a04091a9fdc5a95161c5830a883b197512ad7"
+    root_url "https://github.com/CCSEPBVR/homebrew-pbvr/releases/download/v3.6.1"
+    sha256 cellar: :any, arm64_tahoe: "a1aca7a6b47f3518f91dd787dd0ca0e03b543e557b0c60b2e6bce3148540673f"
   end
 
   # depends_on "cmake" => :build
   depends_on "gcc"
   depends_on "libomp"
   depends_on "uwebsockets"
-  depends_on "qt@6.2.4"
+  depends_on "qt@6.11.0"
   depends_on "vtk@9.3.1"
   depends_on "freeglut"
 
-  patch do
-    url "https://github.com/CCSEPBVR/homebrew-pbvr/releases/download/v3.6.0/pbvr-makefile-uwebsockets.patch"
-    sha256 "01637abfb9e341650907fa0b0a8f746a1dd93eef620af53c1c1e20bcd0ec0fe2"
-  end
-
-  patch do
-    url "https://github.com/CCSEPBVR/homebrew-pbvr/releases/download/v3.6.0/kvs-conf-mac.patch"
-    sha256 "41ed91ddecf462ea10fb6fa4347a1692be6ad41436cfe91c9eaa4f3149ad9610"
-  end
-
-  on_linux do
+  on_macos do
     patch do
-      url "https://github.com/CCSEPBVR/homebrew-pbvr/releases/download/v3.6.0/pbvr-conf-linux.patch"
-      sha256 "3c96cc094418e187e08bd930e2ad31c9dd32c3059139476d6376ecd0e009a4bd"
+      url "https://github.com/CCSEPBVR/homebrew-pbvr/releases/download/v3.6.1/pbvr-mac.patch"
+      sha256 "fd2d1ba85f8ef5fcd78ccb6aa4d79ad05f5b3f84a6b2dbec5076b03c59f547d5"
     end
   end
 
@@ -59,31 +48,6 @@ class Pbvr < Formula
     ENV["UWS_LIB_PATH"] = Formula["uwebsockets"].opt_lib
     ENV["OPENSSL_LIB_PATH"] = Formula["openssl@3"].opt_lib
 
-    Dir["**/*"].each do |file|
-      next unless File.file?(file)
-      next unless File.read(file).include?("KVS_DIR")
-      inreplace file, "KVS_DIR", "HOMEBREW_KVS_DIR"
-    end
-
-    Dir["KVS/**/*.{h,hpp,cpp,cc,cxx}"].each do |file|
-      next unless File.file?(file)
-
-      contents = File.binread(file)
-      text = contents.force_encoding("UTF-8")
-      next unless text.valid_encoding?
-      next unless text.match?(/(?<!std::)\bsize_t\b/)
-
-      inreplace file, /(?<!std::)\bsize_t\b/, "std::size_t"
-    end
-
-    Dir["KVS/**/*.{h,hpp,cpp,cc,cxx}"].each do |file|
-      text = File.read(file)
-      next if text.include?("#include <cstdint>")
-      new_text = text.sub(/^(#include )/, "#include <cstdint>\n\\1")
-
-      File.write(file, new_text)
-    end
-
     # KVSのビルド
     cd "KVS" do
       system "make", "-j", ENV.make_jobs
@@ -93,15 +57,13 @@ class Pbvr < Formula
     # サーバのビルド
     system "make", "third", "-C", "Server", "-j", ENV.make_jobs
     system "make", "-C", "Server", "-j", ENV.make_jobs
-    system "make", "-C", "Server/Filter", "-j", ENV.make_jobs
-    system "make", "-C", "Server/KVSMLConverter", "-j", ENV.make_jobs
     bin.install "Server/pbvr_server"
     bin.install "Server/Filter/pbvr_filter"
     bin.install "Server/KVSMLConverter/Example/Release/kvsml-converter"
 
     # クライアントのビルド
     mkdir "Client/build" do
-      system "qmake", "../pbvr_client.pro", "CONFIG+=release"
+      system "qmake", "../pbvr_client.pro", "CONFIG+=release", "CONFIG+=c++17"
       system "make", "-j", ENV.make_jobs
       if OS.mac?
         bin.install "App/pbvr_client.app/Contents/MacOS/pbvr_client"
