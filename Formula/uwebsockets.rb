@@ -9,6 +9,7 @@ class Uwebsockets < Formula
     root_url "https://github.com/CCSEPBVR/homebrew-pbvr/releases/download/v3.6.1"
     rebuild 1
     sha256 cellar: :any_skip_relocation, arm64_tahoe: "5b595a55e22f02f80f30a8113dcd18dc8e7a335aa40556ef4b2a9c1c68ff69d5"
+    sha256 cellar: :any_skip_relocation, x86_64_linux: "fa51077321328211c7e7f9b43d5c98be3c312a8bb4624ab6708863a78f931222"
   end
 
     resource "uSockets" do
@@ -24,6 +25,12 @@ class Uwebsockets < Formula
         end
 
         cd "uSockets" do
+            if OS.linux?
+                inreplace "Makefile",
+                    "$(CXX) $(CXXFLAGS) -std=c++17 -flto -O3 -c src/crypto/*.cpp",
+                    "$(CXX) $(CXXFLAGS) -std=c++17 -O3 -c src/crypto/*.cpp"
+            end
+
             system "make",
                 "CC=#{ENV.cc}",
                 "CXX=#{ENV.cxx}",

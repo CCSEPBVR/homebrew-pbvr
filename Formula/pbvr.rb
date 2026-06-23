@@ -11,6 +11,7 @@ class Pbvr < Formula
   bottle do
     root_url "https://github.com/CCSEPBVR/homebrew-pbvr/releases/download/v3.6.1"
     sha256 cellar: :any, arm64_tahoe: "a1aca7a6b47f3518f91dd787dd0ca0e03b543e557b0c60b2e6bce3148540673f"
+    sha256 cellar: :any, x86_64_linux: "feaa77d3cdeabf0f98d55dd9feaee6d14de9c47fee9a95abc134df6d22f5016a"
   end
 
   # depends_on "cmake" => :build
@@ -31,7 +32,7 @@ class Pbvr < Formula
   on_linux do
     patch do
       url "https://github.com/CCSEPBVR/homebrew-pbvr/releases/download/v3.6.1/pbvr-linux.patch"
-      sha256 "6e041935dc470bebc419d16891ca0771082570c40d001fb69e35fca7d9416126"
+      sha256 "ec3d68e4048b2f6ec89ebb3f4e07edac3ddb3a386f547f338d1e1287d1b74522"
     end
   end
 

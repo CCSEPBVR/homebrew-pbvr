@@ -10,7 +10,7 @@ index fb0a763..8326abf 100644
 +KVS_ENABLE_GLEW                  = 0
  KVS_ENABLE_OPENMP                = 0
  KVS_ENABLE_DEPRECATED            = 0
- 
+
 @@ -14,7 +14,7 @@ KVS_SUPPORT_GLFW                 = 0
  KVS_SUPPORT_FFMPEG               = 0
  KVS_SUPPORT_OPENCV               = 0
@@ -21,7 +21,7 @@ index fb0a763..8326abf 100644
  KVS_SUPPORT_MPI                  = 0
  KVS_SUPPORT_EGL                  = 0
 diff --git a/Server/Makefile b/Server/Makefile
-index 53910d3..53b18ae 100644
+index 53910d3..be29cdd 100644
 --- a/Server/Makefile
 +++ b/Server/Makefile
 @@ -130,9 +130,9 @@ endif
@@ -33,8 +33,8 @@ index 53910d3..53b18ae 100644
 -LINK_LIBRARY += $(KVS_UWS_DIR)/uSockets/uSockets.a -lssl -lcrypto -lz
 +INCLUDE_PATH += -I$(UWS_INCLUDE_PATH) -I$(UWS_INCLUDE_PATH)/uSockets
 +LIBRARY_PATH += -L$(OPENSSL_LIB_PATH)
-+LINK_LIBRARY += $(UWS_LIB_DIR)/uSockets.a -lssl -lcrypto -lz
- 
++LINK_LIBRARY += $(UWS_LIB_PATH)/uSockets.a -lssl -lcrypto -lz
+
  #=========================================================
  # VPATH（検索パス）設定
 diff --git a/Server/pbvr.conf b/Server/pbvr.conf

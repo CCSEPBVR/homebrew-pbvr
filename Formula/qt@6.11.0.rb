@@ -14,6 +14,7 @@ class QtAT6110 < Formula
   bottle do
     root_url "https://github.com/CCSEPBVR/homebrew-pbvr/releases/download/v3.6.1"
     sha256 cellar: :any_skip_relocation, arm64_tahoe: "c85bef3b210d15894576eb13defc73da7cf136006530bac28c2b05cf71e4744b"
+    sha256 cellar: :any, x86_64_linux: "755222437792198714584e3b45b2e1f8abff99dce9da2d25aac608ef4aaf6371"
   end
 
   depends_on "cmake" => [:build]
@@ -52,6 +53,10 @@ class QtAT6110 < Formula
   end
 
   def install
+    # Qt checks x86 SIMD support with targeted -march flags during configure.
+    # Allow those flags through Homebrew's compiler shims on Linux.
+    ENV.runtime_cpu_detection if OS.linux?
+
     mkdir "build" do
       # cmakeの引数の設定
       # FEATURE_gssapi=OFFにしないとビルドエラー
@@ -119,3 +124,20 @@ index 8f6c434c4e..25e25af965 100644
 +        endif()
      endif()
  endfunction()
+diff --git a/qtbase/config.tests/x86intrin/CMakeLists.txt b/qtbase/config.tests/x86intrin/CMakeLists.txt
+index d365b9bbd9..6589c6aa71 100644
+--- a/qtbase/config.tests/x86intrin/CMakeLists.txt
++++ b/qtbase/config.tests/x86intrin/CMakeLists.txt
+@@ -6,7 +6,11 @@ project(x86intrin LANGUAGES CXX)
+ add_executable(x86intrin main.cpp)
+ if(CMAKE_CXX_COMPILER_ID MATCHES "Clang|GNU|IntelLLVM|QCC")
+     target_compile_options(x86intrin PUBLIC
+-        "-march=cannonlake" "-mrdrnd" "-mrdseed" "-maes" "-msha" "-w")
++        "-march=cannonlake" "-mrdrnd" "-mrdseed" "-maes" "-msha"
++        "-mbmi" "-mbmi2" "-mlzcnt"
++        "-mavx" "-mavx2" "-mfma" "-mf16c"
++        "-mavx512f" "-mavx512bw" "-mavx512vl" "-mavx512dq"
++        "-mavx512ifma" "-mavx512vbmi" "-w")
+ elseif(CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
+     target_compile_options(x86intrin PUBLIC "-arch:AVX512" "-W0")
+ endif()

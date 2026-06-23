@@ -9,6 +9,7 @@ class VtkAT931 < Formula
     root_url "https://github.com/CCSEPBVR/homebrew-pbvr/releases/download/v3.6.1"
     rebuild 2
     sha256 cellar: :any, arm64_tahoe: "13a59136c4236ea34407f77363414d578991d70c9a3b0df944414445cf9edb56"
+    sha256 cellar: :any, x86_64_linux: "9d2680c281b147ba511939fd63cd45cf5f37edd3f328d081c31c7ce39009cee3"
   end
 
   depends_on "cmake" => [:build]
