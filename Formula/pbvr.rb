@@ -4,14 +4,13 @@
 class Pbvr < Formula
   desc ""
   homepage "https://github.com/CCSEPBVR/CS-IS-PBVR"
-  url "https://github.com/CCSEPBVR/CS-IS-PBVR/archive/refs/tags/v3.6.1.tar.gz"
-  sha256 "707d6bce659cb5b6980d87a84b2ae6546006f777a8119666f6fde9887e60dd49"
+  url "https://github.com/CCSEPBVR/CS-IS-PBVR/archive/refs/tags/v3.6.2.tar.gz"
+  sha256 "b7054c5210f00e1ca7991404d15f1c9c92e28ef4fad820b56a6ddcd68d69e6db"
   license ""
 
   bottle do
-    root_url "https://github.com/CCSEPBVR/homebrew-pbvr/releases/download/v3.6.1"
-    sha256 cellar: :any, arm64_tahoe: "a1aca7a6b47f3518f91dd787dd0ca0e03b543e557b0c60b2e6bce3148540673f"
-    sha256 cellar: :any, x86_64_linux: "feaa77d3cdeabf0f98d55dd9feaee6d14de9c47fee9a95abc134df6d22f5016a"
+    root_url "https://github.com/CCSEPBVR/homebrew-pbvr/releases/download/v3.6.2"
+    sha256 cellar: :any, arm64_tahoe: "5d9fdbaa8462ced9d5cd9e0b7b27289171bd2dfa5474ed070de2bdabbbd6c94f"
   end
 
   # depends_on "cmake" => :build
@@ -24,15 +23,15 @@ class Pbvr < Formula
 
   on_macos do
     patch do
-      url "https://github.com/CCSEPBVR/homebrew-pbvr/releases/download/v3.6.1/pbvr-mac.patch"
-      sha256 "fd2d1ba85f8ef5fcd78ccb6aa4d79ad05f5b3f84a6b2dbec5076b03c59f547d5"
+      url "https://github.com/CCSEPBVR/homebrew-pbvr/releases/download/v3.6.2/pbvr-mac.patch"
+      sha256 "a9b7a4d7492e3c15132c39c76f378179b9a042db189408464ad52d82c9fcb415"
     end
   end
 
   on_linux do
     patch do
-      url "https://github.com/CCSEPBVR/homebrew-pbvr/releases/download/v3.6.1/pbvr-linux.patch"
-      sha256 "ec3d68e4048b2f6ec89ebb3f4e07edac3ddb3a386f547f338d1e1287d1b74522"
+      url "https://github.com/CCSEPBVR/homebrew-pbvr/releases/download/v3.6.2/pbvr-linux.patch"
+      sha256 "95a0e6d31101cbb31b38986c7a1d5b2e14ccb4baa345d6573dbbdc33ff84a9ca"
     end
   end
 

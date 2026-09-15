@@ -4,14 +4,13 @@
 class PbvrExtendedFileformat < Formula
   desc ""
   homepage "https://github.com/CCSEPBVR/CS-IS-PBVR"
-  url "https://github.com/CCSEPBVR/CS-IS-PBVR/archive/refs/tags/v3.6.1.tar.gz"
-  sha256 "707d6bce659cb5b6980d87a84b2ae6546006f777a8119666f6fde9887e60dd49"
+  url "https://github.com/CCSEPBVR/CS-IS-PBVR/archive/refs/tags/v3.6.2.tar.gz"
+  sha256 "b7054c5210f00e1ca7991404d15f1c9c92e28ef4fad820b56a6ddcd68d69e6db"
   license ""
 
   bottle do
-    root_url "https://github.com/CCSEPBVR/homebrew-pbvr/releases/download/v3.6.1"
-    sha256 cellar: :any, arm64_tahoe: "37c068cb68b894f366c11377286e3b1e76835fe79411b4a8bd2a08d2bbd0572e"
-    sha256 cellar: :any, x86_64_linux: "6164d5d2f6c58436e2203bea338726f47d8f5baf8ae1e4eda7c4c2a863b5ba40"
+    root_url "https://github.com/CCSEPBVR/homebrew-pbvr/releases/download/v3.6.2"
+    sha256 cellar: :any, arm64_tahoe: "b52c562cadf0b43d3c24ec038a0b378a92c33fddcf2a6ebb3198d69914c2d145"
   end
 
   # depends_on "cmake" => :build
@@ -30,15 +29,15 @@ class PbvrExtendedFileformat < Formula
 
   on_macos do
     patch do
-      url "https://github.com/CCSEPBVR/homebrew-pbvr/releases/download/v3.6.1/pbvr-mac-extended-fileformat.patch"
-      sha256 "89db902897131c775ccd890b43cb1e7ab0ee205abbf7255eebd65e6d9098a8a9"
+      url "https://github.com/CCSEPBVR/homebrew-pbvr/releases/download/v3.6.2/pbvr-mac-extended-fileformat.patch"
+      sha256 "ee28c93ac77f9e02b6006d46c8253e0afa9261edbebf4d1be78823226e3299dd"
     end
   end
 
   on_linux do
     patch do
-      url "https://github.com/CCSEPBVR/homebrew-pbvr/releases/download/v3.6.1/pbvr-linux-extended-fileformat.patch"
-      sha256 "9cc897f571069a031d73e31ca6808ae6e79c7f7f5ed85a0b1ced25cdbe14d7f6"
+      url "https://github.com/CCSEPBVR/homebrew-pbvr/releases/download/v3.6.2/pbvr-linux-extended-fileformat.patch"
+      sha256 "5450c2a54e88344a3f32d1d2d9f283d3ebdc915b6dbfdcd040175e112ea86cf5"
     end
   end
 

@@ -1,47 +1,55 @@
 diff --git a/KVS/kvs.conf b/KVS/kvs.conf
-index fb0a763..752af87 100644
 --- a/KVS/kvs.conf
 +++ b/KVS/kvs.conf
-@@ -4,7 +4,7 @@
- #=============================================================================
- KVS_ENABLE_OPENGL                = 1
- KVS_ENABLE_GLU                   = 1
+@@ -7,1 +7,1 @@
 -KVS_ENABLE_GLEW                  = 1
 +KVS_ENABLE_GLEW                  = 0
- KVS_ENABLE_OPENMP                = 0
- KVS_ENABLE_DEPRECATED            = 0
-
-@@ -14,9 +14,9 @@ KVS_SUPPORT_GLFW                 = 0
- KVS_SUPPORT_FFMPEG               = 0
- KVS_SUPPORT_OPENCV               = 0
- KVS_SUPPORT_QT                   = 1
+@@ -17,1 +17,1 @@
 -KVS_SUPPORT_OPENXR               = 1
 +KVS_SUPPORT_OPENXR               = 0
- KVS_SUPPORT_PYTHON               = 0
- KVS_SUPPORT_MPI                  = 0
- KVS_SUPPORT_EGL                  = 0
- KVS_SUPPORT_OSMESA               = 0
+@@ -22,1 +22,1 @@
 -KVS_SUPPORT_EXTENDED_FILE_FORMAT = 0
 +KVS_SUPPORT_EXTENDED_FILE_FORMAT = 1
 diff --git a/Server/Makefile b/Server/Makefile
-index 53910d3..be29cdd 100644
 --- a/Server/Makefile
 +++ b/Server/Makefile
-@@ -130,9 +130,9 @@ endif
- #=============================================================================
- # uWebSockets
- #=============================================================================
+@@ -158,3 +158,3 @@
 -INCLUDE_PATH += -I$(KVS_UWS_DIR)/src -I$(KVS_UWS_DIR)/uSockets/src
 -LIBRARY_PATH += -L/opt/homebrew/opt/openssl@3/lib
 -LINK_LIBRARY += $(KVS_UWS_DIR)/uSockets/uSockets.a -lssl -lcrypto -lz
 +INCLUDE_PATH += -I$(UWS_INCLUDE_PATH) -I$(UWS_INCLUDE_PATH)/uSockets
 +LIBRARY_PATH += -L$(OPENSSL_LIB_PATH)
 +LINK_LIBRARY += $(UWS_LIB_PATH)/uSockets.a -lssl -lcrypto -lz
-
- #=========================================================
- # VPATH（検索パス）設定
+@@ -202,1 +202,1 @@
+-.PHONY: all server third filter kvsml_converter clean check_kvs_install_dir check_kvs_uws_dir
++.PHONY: all server third filter kvsml_converter clean check_uws_path
+@@ -218,1 +218,1 @@
+-define report_kvs_uws_dir_error
++define report_uws_path_error
+@@ -222,2 +222,2 @@
+-$(info KVS_UWS_DIR is not set.)
+-$(info 環境変数 KVS_UWS_DIR が設定されていません。)
++$(info UWS_INCLUDE_PATH or UWS_LIB_PATH is not set.)
++$(info 環境変数 UWS_INCLUDE_PATH または UWS_LIB_PATH が設定されていません。)
+@@ -229,1 +229,1 @@
+-$(error Server build stopped because KVS_UWS_DIR is not set)
++$(error Server build stopped because UWS_INCLUDE_PATH or UWS_LIB_PATH is not set)
+@@ -235,2 +235,3 @@
+-check_kvs_uws_dir: check_kvs_install_dir
+-	$(if $(strip $(KVS_UWS_DIR)),,$(report_kvs_uws_dir_error))
++check_uws_path: check_kvs_install_dir
++	$(if $(strip $(UWS_INCLUDE_PATH)),,$(report_uws_path_error))
++	$(if $(strip $(UWS_LIB_PATH)),,$(report_uws_path_error))
+@@ -240,1 +240,1 @@
+-server: check_kvs_uws_dir
++server: check_uws_path
+@@ -255,1 +255,1 @@
+-$(TARGET): $(OBJS) | check_kvs_uws_dir
++$(TARGET): $(OBJS) | check_uws_path
+@@ -258,1 +258,1 @@
+-$(OUTDIR)/%.o: %.cpp | check_kvs_uws_dir
++$(OUTDIR)/%.o: %.cpp | check_uws_path
 diff --git a/Server/pbvr.conf b/Server/pbvr.conf
-index 6f8248d..e99cdf1 100644
 --- a/Server/pbvr.conf
 +++ b/Server/pbvr.conf
 @@ -1,7 +1,7 @@

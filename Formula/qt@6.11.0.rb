@@ -12,14 +12,15 @@ class QtAT6110 < Formula
   ]
 
   bottle do
-    root_url "https://github.com/CCSEPBVR/homebrew-pbvr/releases/download/v3.6.1"
-    sha256 cellar: :any_skip_relocation, arm64_tahoe: "c85bef3b210d15894576eb13defc73da7cf136006530bac28c2b05cf71e4744b"
-    sha256 cellar: :any, x86_64_linux: "755222437792198714584e3b45b2e1f8abff99dce9da2d25aac608ef4aaf6371"
+    rebuild 1
+    root_url "https://github.com/CCSEPBVR/homebrew-pbvr/releases/download/v3.6.2"
+    sha256 cellar: :any, arm64_tahoe: "8e4d2519523b13dd1892b6ce5707dc57003dee58f0fb9ac29cc09c1977cd4bb3"
   end
 
   depends_on "cmake" => [:build]
   depends_on "python" => [:build]
   depends_on "openssl@3"
+  depends_on "zstd"
 
   on_macos do
     depends_on xcode: :build
