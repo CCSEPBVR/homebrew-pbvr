@@ -15,6 +15,7 @@ class QtAT6110 < Formula
     rebuild 1
     root_url "https://github.com/CCSEPBVR/homebrew-pbvr/releases/download/v3.6.2"
     sha256 cellar: :any, arm64_tahoe: "8e4d2519523b13dd1892b6ce5707dc57003dee58f0fb9ac29cc09c1977cd4bb3"
+    sha256 cellar: :any, x86_64_linux: "2daebd2675e3732ce080a418089b29e03f3e6445696789d7293e868a2aa2ba48"
   end
 
   depends_on "cmake" => [:build]
