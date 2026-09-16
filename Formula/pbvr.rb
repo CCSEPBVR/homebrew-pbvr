@@ -10,7 +10,7 @@ class Pbvr < Formula
 
   bottle do
     root_url "https://github.com/CCSEPBVR/homebrew-pbvr/releases/download/v3.6.2"
-    sha256 cellar: :any, arm64_tahoe: "5d9fdbaa8462ced9d5cd9e0b7b27289171bd2difa5474ed070de2bdabbbd6c94f"
+    sha256 cellar: :any, arm64_tahoe: "5d9fdbaa8462ced9d5cd9e0b7b27289171bd2dfa5474ed070de2bdabbbd6c94f"
     sha256 cellar: :any, x86_64_linux: "18bbb33e9c4f161d5490e5ffeb6531587fed149e66e469544ca619ccec0ffb95"
   end
 
