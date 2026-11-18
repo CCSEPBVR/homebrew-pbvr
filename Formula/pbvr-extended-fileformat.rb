@@ -1,54 +1,41 @@
-# Documentation: https://docs.brew.sh/Formula-Cookbook
-#                https://rubydoc.brew.sh/Formula
-# PLEASE REMOVE ALL GENERATED COMMENTS BEFORE SUBMITTING YOUR PULL REQUEST!
 class PbvrExtendedFileformat < Formula
-  desc ""
+  desc "Particle-based volume rendering, with extended file formats"
   homepage "https://github.com/CCSEPBVR/CS-IS-PBVR"
-  url "https://github.com/CCSEPBVR/CS-IS-PBVR/archive/refs/tags/v3.6.2.tar.gz"
-  sha256 "b7054c5210f00e1ca7991404d15f1c9c92e28ef4fad820b56a6ddcd68d69e6db"
-  license ""
+  url "https://github.com/CCSEPBVR/CS-IS-PBVR/archive/refs/tags/v4.0.0.tar.gz"
+  sha256 "5a2ded2e181198ad3afd2ae4bba264684689459d1b186d18052c378159ffd2f6"
+  license "LGPL-3.0-or-later"
 
-  bottle do
-    root_url "https://github.com/CCSEPBVR/homebrew-pbvr/releases/download/v3.6.2"
-    sha256 cellar: :any, arm64_tahoe: "b52c562cadf0b43d3c24ec038a0b378a92c33fddcf2a6ebb3198d69914c2d145"
-    sha256 cellar: :any, x86_64_linux: "92ac9c0508f44004e67447325947a85e5213cb16f025c3c2b5b0d75a25153605"
-  end
-
-  # depends_on "cmake" => :build
   depends_on "gcc"
-  depends_on "libomp"
   depends_on "uwebsockets"
+  depends_on "openssl@3"
   depends_on "qt@6.11.0"
   depends_on "vtk@9.3.1"
   depends_on "freeglut"
 
-  # Additional dependency
-  # resource "" do
-  #   url ""
-  #   sha256 ""
-  # end
-
   on_macos do
+    depends_on "libomp"
+
     patch do
-      url "https://github.com/CCSEPBVR/homebrew-pbvr/releases/download/v3.6.2/pbvr-mac-extended-fileformat.patch"
-      sha256 "ee28c93ac77f9e02b6006d46c8253e0afa9261edbebf4d1be78823226e3299dd"
+      url "https://github.com/CCSEPBVR/homebrew-pbvr/releases/download/v4.0.0/pbvr-mac-extended-fileformat.patch"
+      sha256 "91e4a9a3ac1d5e5997210fea4a74ac517e30773d6aaf688377426dea6df2b892"
     end
   end
 
   on_linux do
     patch do
-      url "https://github.com/CCSEPBVR/homebrew-pbvr/releases/download/v3.6.2/pbvr-linux-extended-fileformat.patch"
-      sha256 "5450c2a54e88344a3f32d1d2d9f283d3ebdc915b6dbfdcd040175e112ea86cf5"
+      url "https://github.com/CCSEPBVR/homebrew-pbvr/releases/download/v4.0.0/pbvr-linux-extended-fileformat.patch"
+      sha256 "fefe0de80df1d97fdcdc7f07c96a9d4a368d7e2e82590b131deacd2beedbd165"
     end
   end
 
   def install
-    # Remove unrecognized options if they cause configure to fail
-    # https://rubydoc.brew.sh/Formula.html#std_configure_args-instance_method
-    # system "./configure", "--disable-silent-rules", *std_configure_args
-    # system "cmake", "-S", ".", "-B", "build", *std_cmake_args
-
-    ENV["HOMEBREW_KVS_DIR"] = "#{prefix}"
+    ENV.prepend_path "PATH", Formula["qt@6.11.0"].opt_bin
+    ENV["KVS_CPP"] = ENV.cxx
+    ENV["KVS_CC"] = ENV.cc
+    if OS.mac?
+      ENV["HOMEBREW_LIBOMP_INCLUDE"] = Formula["libomp"].opt_include
+      ENV["HOMEBREW_LIBOMP_LIB"] = Formula["libomp"].opt_lib
+    end
     ENV["VTK_VERSION"] = "9.3"
     ENV["VTK_INCLUDE_PATH"] = "#{Formula["vtk@9.3.1"].opt_include}/vtk-9.3"
     ENV["VTK_LIB_PATH"] = Formula["vtk@9.3.1"].opt_lib
@@ -63,7 +50,6 @@ class PbvrExtendedFileformat < Formula
     end
 
     # サーバのビルド
-    system "make", "third", "-C", "Server", "-j", ENV.make_jobs
     system "make", "-C", "Server", "-j", ENV.make_jobs
     bin.install "Server/pbvr_server"
     bin.install "Server/Filter/pbvr_filter"
@@ -71,7 +57,7 @@ class PbvrExtendedFileformat < Formula
 
     # クライアントのビルド
     mkdir "Client/build" do
-      system "qmake", "../pbvr_client.pro", "CONFIG+=release"
+      system "qmake", "../pbvr_client.pro", "CONFIG+=release", "CONFIG+=c++17"
       system "make", "-j", ENV.make_jobs
       if OS.mac?
         bin.install "App/pbvr_client.app/Contents/MacOS/pbvr_client"
@@ -83,27 +69,27 @@ class PbvrExtendedFileformat < Formula
         cp_r "App/Shader", bin
       end
     end
-  end
 
-  def caveats
-    <<~EOS
-    ===============================================================================
-    To use `pbvr_client`, you might need to set the following environment variable:
-    echo 'export HOMEBREW_KVS_DIR=#{prefix}' >> ~/.zshrc
-    ===============================================================================
-    EOS
+    # Move KVS only after all builds using the source-tree layout are complete.
+    prefix.install "KVS/Install/kvs.conf", "KVS/Install/Makefile.def"
+    include.install Dir["KVS/Install/include/*"]
+    lib.install Dir["KVS/Install/lib/*"]
+    bin.install Dir["KVS/Install/bin/*"]
+    inreplace prefix/"Makefile.def",
+              "PBVR_KVS_INSTALL_DIR ?= $(PBVR_KVS_ROOT_DIR)/Install",
+              "PBVR_KVS_INSTALL_DIR ?= $(PBVR_KVS_ROOT_DIR)"
+    (pkgshare/"licenses").install "LICENSE", Dir["licenses/*"]
   end
 
   test do
-    # `test do` will create, run in and delete a temporary directory.
-    #
-    # This test will fail and we won't accept that! For Homebrew/homebrew-core
-    # this will need to be a test that verifies the functionality of the
-    # software. Run the test with `brew test CS-IS-PBVR`. Options passed
-    # to `brew install` such as `--HEAD` also need to be provided to `brew test`.
-    #
-    # The installed folder is not in the path, so use the entire path to any
-    # executables being tested: `system bin/"program", "do", "something"`.
-    system "false"
+    %w[pbvr_server pbvr_client pbvr_filter kvsml-converter].each do |command|
+      assert_path_exists bin/command
+      assert_predicate bin/command, :executable?
+    end
+    assert_path_exists lib/"libkvsCore.a"
+    assert_path_exists lib/"libkvsSupportExtendedFileFormat.a"
+    assert_path_exists bin/"Font/NotoSans-Regular.ttf"
+    assert_path_exists bin/"Shader/PBR_resize.vert"
+    assert_match(/^KVS_SUPPORT_EXTENDED_FILE_FORMAT = 1$/, (prefix/"kvs.conf").read)
   end
 end
