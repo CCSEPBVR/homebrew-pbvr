@@ -5,6 +5,11 @@ class PbvrExtendedFileformat < Formula
   sha256 "5a2ded2e181198ad3afd2ae4bba264684689459d1b186d18052c378159ffd2f6"
   license "LGPL-3.0-or-later"
 
+  bottle do
+    root_url "https://github.com/CCSEPBVR/homebrew-pbvr/releases/download/v4.0.0"
+    sha256 cellar: :any, arm64_golden_gate: "1abe6801af99d0fb056afe3a42f23ea59eb84abff0e01d42bfdc2ff40a45dabb"
+  end
+
   depends_on "gcc"
   depends_on "uwebsockets"
   depends_on "openssl@3"
