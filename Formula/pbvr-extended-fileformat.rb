@@ -8,6 +8,7 @@ class PbvrExtendedFileformat < Formula
   bottle do
     root_url "https://github.com/CCSEPBVR/homebrew-pbvr/releases/download/v4.0.0"
     sha256 cellar: :any, arm64_golden_gate: "1abe6801af99d0fb056afe3a42f23ea59eb84abff0e01d42bfdc2ff40a45dabb"
+    sha256 cellar: :any, x86_64_linux:      "c98d2cc21bb50fc6103a90206461c1c92ca75f6dbacc56844827b1d34059d3c5"
   end
 
   depends_on "gcc"
@@ -27,6 +28,10 @@ class PbvrExtendedFileformat < Formula
   end
 
   on_linux do
+    depends_on "mesa"
+    depends_on "mesa-glu"
+    depends_on "zlib-ng-compat"
+
     patch do
       url "https://github.com/CCSEPBVR/homebrew-pbvr/releases/download/v4.0.0/pbvr-linux-extended-fileformat.patch"
       sha256 "fefe0de80df1d97fdcdc7f07c96a9d4a368d7e2e82590b131deacd2beedbd165"
@@ -47,6 +52,17 @@ class PbvrExtendedFileformat < Formula
     ENV["UWS_INCLUDE_PATH"] = Formula["uwebsockets"].opt_include
     ENV["UWS_LIB_PATH"] = Formula["uwebsockets"].opt_lib
     ENV["OPENSSL_LIB_PATH"] = Formula["openssl@3"].opt_lib
+
+    if OS.linux?
+      # Use the same Homebrew compiler as KVS and allow Homebrew to set the CPU target.
+      inreplace "Server/arch/Makefile_machine_gcc_omp" do |s|
+        s.gsub!(/^CXX=g\+\+$/, 'CXX=$(KVS_CPP)')
+        s.gsub!(/^CC=gcc$/, 'CC=$(KVS_CC)')
+        s.gsub!(/^LD=g\+\+$/, 'LD=$(CXX)')
+        s.gsub!(" -march=native", "")
+        s.gsub!("LDFLAGS=-fopenmp -lstdc++ -static-libgcc -static-libstdc++", "LDFLAGS=-fopenmp")
+      end
+    end
 
     # KVSのビルド
     cd "KVS" do
